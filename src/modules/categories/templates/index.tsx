@@ -1,8 +1,6 @@
 import { notFound } from "next/navigation"
-import { Suspense } from "react"
 
 import InteractiveLink from "@modules/common/components/interactive-link"
-import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import ProductSort, { SortOptions } from "@modules/store/components/sort"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -78,20 +76,11 @@ export default function CategoryTemplate({
             </ul>
           </div>
         )}
-        <Suspense
-          fallback={
-            <SkeletonProductGrid
-              numberOfProducts={category.products?.length ?? 8}
-            />
-          }
-        >
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            categoryId={category.id}
-            countryCode={countryCode}
-          />
-        </Suspense>
+        <PaginatedProducts
+          sortBy={sort}
+          page={pageNumber}
+          countryCode={countryCode}
+        />
       </div>
     </div>
   )

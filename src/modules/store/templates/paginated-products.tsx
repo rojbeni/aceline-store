@@ -1,92 +1,92 @@
+"use client"
+
+import { useEffect, useMemo, useState, useTransition } from "react"
+import { HttpTypes } from "@medusajs/types"
+
 import { listProductsWithSort } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
 import ProductPreview from "@modules/products/components/product-preview"
-import { Pagination } from "@modules/store/components/pagination"
+import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
+import { FilterItem, ProductFilter } from "@modules/store/components/filter"
 import { SortOptions } from "@modules/store/components/sort"
 
-const PRODUCT_LIMIT = 12
-
-type PaginatedProductsParams = {
-  limit: number
-  collection_id?: string[]
-  category_id?: string[]
-  id?: string[]
-  order?: string
-}
-
-export default async function PaginatedProducts({
-  sortBy,
-  page,
-  collectionId,
-  categoryId,
-  productsIds,
-  countryCode,
-}: {
+type PaginatedProductsProps = {
   sortBy?: SortOptions
   page: number
-  collectionId?: string
-  categoryId?: string
-  productsIds?: string[]
   countryCode: string
-}) {
-  const queryParams: PaginatedProductsParams = {
-    limit: 12,
+  filter?: ProductFilter
+  onVariantsChange?: (variants: FilterItem[]) => void
+}
+
+export default function PaginatedProducts({
+  sortBy,
+  page,
+  countryCode,
+  filter,
+  onVariantsChange,
+}: PaginatedProductsProps) {
+  const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
+  const [region, setRegion] = useState<HttpTypes.StoreRegion>()
+  const [isPending, startTransition] = useTransition()
+
+  const categoryId = filter?.categoryId
+  const selectedVariant = filter?.variant
+
+  useEffect(() => {
+    startTransition(async () => {
+      const [{ response }, fetchedRegion] = await Promise.all([
+        listProductsWithSort({
+          page,
+          queryParams: {
+            limit: 100,
+            ...(categoryId && { category_id: [categoryId] }),
+          },
+          sortBy,
+          countryCode,
+        }),
+        getRegion(countryCode),
+      ])
+
+      setProducts(response.products)
+      setRegion(fetchedRegion ?? undefined)
+    })
+  }, [categoryId, sortBy, page, countryCode])
+
+  useEffect(() => {
+    if (!onVariantsChange) return
+
+    const titles = new Set<string>()
+    products.forEach((p) =>
+      p.variants?.forEach((v) => {
+        if (v.title) titles.add(v.title)
+      })
+    )
+    onVariantsChange(
+      Array.from(titles).map((title) => ({ value: title, label: title }))
+    )
+  }, [products, onVariantsChange])
+
+  const filteredProducts = useMemo(() => {
+    if (!selectedVariant) return products
+    return products.filter((p) =>
+      p.variants?.some((v) => v.title === selectedVariant)
+    )
+  }, [products, selectedVariant])
+
+  if ((isPending && products.length === 0) || !region) {
+    return <SkeletonProductGrid />
   }
-
-  if (collectionId) {
-    queryParams["collection_id"] = [collectionId]
-  }
-
-  if (categoryId) {
-    queryParams["category_id"] = [categoryId]
-  }
-
-  if (productsIds) {
-    queryParams["id"] = productsIds
-  }
-
-  if (sortBy === "created_at") {
-    queryParams["order"] = "created_at"
-  }
-
-  const region = await getRegion(countryCode)
-
-  if (!region) {
-    return null
-  }
-
-  const {
-    response: { products, count },
-  } = await listProductsWithSort({
-    page,
-    queryParams,
-    sortBy,
-    countryCode,
-  })
-
-  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 
   return (
-    <>
-      <ul
-        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
-        data-testid="products-list"
-      >
-        {products.map((p) => {
-          return (
-            <li key={p.id}>
-              <ProductPreview product={p} region={region} />
-            </li>
-          )
-        })}
-      </ul>
-      {totalPages > 1 && (
-        <Pagination
-          data-testid="product-pagination"
-          page={page}
-          totalPages={totalPages}
-        />
-      )}
-    </>
+    <ul
+      className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
+      data-testid="products-list"
+    >
+      {filteredProducts.map((p) => (
+        <li key={p.id}>
+          <ProductPreview product={p} region={region} />
+        </li>
+      ))}
+    </ul>
   )
 }

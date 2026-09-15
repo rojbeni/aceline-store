@@ -1,6 +1,3 @@
-import { Suspense } from "react"
-
-import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import ProductSort, { SortOptions } from "@modules/store/components/sort"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import { HttpTypes } from "@medusajs/types"
@@ -26,20 +23,11 @@ export default function CollectionTemplate({
           <h1 className="text-2xl-semi">{collection.title}</h1>
           <ProductSort sortBy={sort} />
         </div>
-        <Suspense
-          fallback={
-            <SkeletonProductGrid
-              numberOfProducts={collection.products?.length}
-            />
-          }
-        >
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            collectionId={collection.id}
-            countryCode={countryCode}
-          />
-        </Suspense>
+        <PaginatedProducts
+          sortBy={sort}
+          page={pageNumber}
+          countryCode={countryCode}
+        />
       </div>
     </div>
   )

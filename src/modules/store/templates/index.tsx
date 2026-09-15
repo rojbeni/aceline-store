@@ -1,53 +1,59 @@
-import { Suspense } from "react"
+"use client"
+
+import { useCallback, useMemo, useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 
-import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
-import RefinementList from "@modules/store/components/refinement-list"
-import ProductSort, { SortOptions } from "@modules/store/components/sort"
+import Filter, { FilterItem } from "@modules/store/components/filter"
 
 import PaginatedProducts from "./paginated-products"
 
 const StoreTemplate = ({
-  sortBy,
-  page,
-  categoryId,
-  categories,
   countryCode,
+  categories,
 }: {
-  sortBy?: SortOptions
-  page?: string
-  categoryId?: string
-  categories?: HttpTypes.StoreProductCategory[]
   countryCode: string
+  categories?: HttpTypes.StoreProductCategory[]
 }) => {
-  const pageNumber = page ? parseInt(page) : 1
-  const sort = sortBy || "created_at"
+  const [selectedCategory, setSelectedCategory] = useState("")
+  const [selectedVariant, setSelectedVariant] = useState("")
+  const [variantOptions, setVariantOptions] = useState<FilterItem[]>([])
 
-  const activeCategory = categories?.find((c) => c.id === categoryId)
-  const title = activeCategory ? activeCategory.name : "All products"
+  const handleCategoryChange = useCallback((value: string) => {
+    setSelectedCategory(value)
+    setSelectedVariant("")
+  }, [])
+
+  const filter = useMemo(
+    () => ({
+      categoryId: selectedCategory || undefined,
+      variant: selectedVariant || undefined,
+    }),
+    [selectedCategory, selectedVariant]
+  )
+
+  const categoryOptions = useMemo(
+    () => (categories ?? []).map((c) => ({ value: c.id, label: c.name })),
+    [categories]
+  )
 
   return (
-    <div
-      className="flex flex-col small:flex-row small:items-start py-6 content-container"
-      data-testid="category-container"
-    >
-      <RefinementList
-        categories={categories}
-        categoryId={categoryId}
-      />
-      <div className="w-full">
-        <div className="flex flex-col small:flex-row small:items-center justify-between mb-8 gap-4">
-          <h1 data-testid="store-page-title" className="text-2xl-semi">{title}</h1>
-          <ProductSort sortBy={sort} />
-        </div>
-        <Suspense fallback={<SkeletonProductGrid />}>
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            categoryId={categoryId}
-            countryCode={countryCode}
-          />
-        </Suspense>
+    <div className="py-6 content-container" data-testid="category-container">
+      <div className="flex flex-col small:flex-row small:items-start gap-8">
+        <Filter
+          categories={categoryOptions}
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          variants={variantOptions}
+          selectedVariant={selectedVariant}
+          onVariantChange={setSelectedVariant}
+          data-testid="store-filters"
+        />
+        <PaginatedProducts
+          page={1}
+          countryCode={countryCode}
+          filter={filter}
+          onVariantsChange={setVariantOptions}
+        />
       </div>
     </div>
   )
