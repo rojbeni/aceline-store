@@ -8,7 +8,7 @@ import { ArrowRightMini } from "@medusajs/icons"
 import { Button } from "@modules/common/components/ui"
 export default async function Nav() {
   return (
-    <div>
+    <div >
       <header className="relative h-16 mx-auto border-b duration-200 border-ui-border-base">
         <nav className="content-container flex items-center justify-between w-full h-full">
           <div className="flex-1 basis-0 h-full flex items-center">
@@ -16,7 +16,7 @@ export default async function Nav() {
               className="hover:text-ui-fg-base"
               href="/"
               data-testid="nav-account-link"
-            >
+            > 
               Aceline Store
             </LocalizedClientLink>
           </div>
