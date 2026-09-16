@@ -36,12 +36,21 @@ export default function ProductPreview({
           size="full"
           isFeatured={isFeatured}
         />
-        <div className="flex mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
+        <div className="flex mt-4 justify-between gap-x-2">
+          <Text
+            className="text-ui-fg-subtle truncate min-w-0"
+            data-testid="product-title"
+          >
             {product.title}
           </Text>
-          <div className="flex items-center gap-x-2">
-            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+          <div className="flex items-center gap-x-2 flex-shrink-0">
+            {cheapestPrice ? (
+              <PreviewPrice price={cheapestPrice} />
+            ) : (
+              <Text className="text-ui-fg-muted text-small-regular whitespace-nowrap">
+                Price unavailable
+              </Text>
+            )}
           </div>
         </div>
       </div>

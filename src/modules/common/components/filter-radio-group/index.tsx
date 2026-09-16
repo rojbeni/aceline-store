@@ -60,7 +60,7 @@ const FilterRadioGroup = ({
                 id={i.value}
                 value={i.value}
               />
-              {i.label}
+              <span className="capitalize">{i.label}</span>
             </Label>
           )
         })}

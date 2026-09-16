@@ -62,7 +62,9 @@ export default function PaginatedProducts({
       })
     )
     onVariantsChange(
-      Array.from(titles).map((title) => ({ value: title, label: title }))
+      Array.from(titles)
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+        .map((title) => ({ value: title, label: title }))
     )
   }, [products, onVariantsChange])
 

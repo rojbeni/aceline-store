@@ -2,12 +2,13 @@ import { Suspense } from "react"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
+import MobileMenu from "@modules/layout/components/mobile-menu"
 import { CircleUser, ShoppingCart } from 'lucide-react';
 import { ArrowRightMini } from "@medusajs/icons"
 import { Button } from "@modules/common/components/ui"
 export default async function Nav() {
   return (
-    <div className="sticky top-0 inset-x-0 group">
+    <div>
       <header className="relative h-16 mx-auto border-b duration-200 border-ui-border-base">
         <nav className="content-container flex items-center justify-between w-full h-full">
           <div className="flex-1 basis-0 h-full flex items-center">
@@ -30,6 +31,7 @@ export default async function Nav() {
                 <CircleUser></CircleUser>
               </LocalizedClientLink>
             </div>
+            <MobileMenu />
             <Suspense
               fallback={
                 <LocalizedClientLink
