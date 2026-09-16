@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import MobileMenu from "@modules/layout/components/mobile-menu"
+import ThemeToggle from "@modules/layout/components/theme-toggle"
 import { CircleUser, ShoppingCart } from 'lucide-react';
 import { ArrowRightMini } from "@medusajs/icons"
 import { Button } from "@modules/common/components/ui"
@@ -23,6 +24,7 @@ export default async function Nav() {
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
+              <ThemeToggle />
               <LocalizedClientLink
                 className="hover:text-ui-fg-base"
                 href="/account"
@@ -30,6 +32,9 @@ export default async function Nav() {
               >
                 <CircleUser></CircleUser>
               </LocalizedClientLink>
+            </div>
+            <div className="small:hidden">
+              <ThemeToggle />
             </div>
             <MobileMenu />
             <Suspense

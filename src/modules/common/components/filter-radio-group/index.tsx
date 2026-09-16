@@ -45,12 +45,12 @@ const FilterRadioGroup = ({
                 className={clx(
                   "flex items-center justify-center w-4 h-4 flex-shrink-0 rounded-full border transition-colors",
                   isActive
-                    ? "border-black dark:border-neon"
+                    ? "border-primary-container"
                     : "border-ui-border-base"
                 )}
               >
                 {isActive && (
-                  <EllipseMiniSolid className="text-black dark:text-neon" />
+                  <EllipseMiniSolid className="text-primary-container" />
                 )}
               </span>
               <RadioGroup.Item

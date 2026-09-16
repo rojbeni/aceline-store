@@ -124,9 +124,9 @@ export default function Carousel({
                             key={idx}
                             onClick={() => scrollTo(idx)}
                             className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ease-in-out flex-shrink-0 hover:scale-105
-                                ${selectedIndex === idx 
-                                    ? "border-black dark:border-[#c3f400] shadow-lg scale-105" 
-                                    : "border-transparent hover:border-black/20 dark:hover:border-white/10 opacity-60 hover:opacity-100"}`}
+                                ${selectedIndex === idx
+                                    ? "border-primary-container shadow-lg scale-105"
+                                    : "border-transparent hover:border-outline-variant opacity-60 hover:opacity-100"}`}
                             aria-label={`Go to slide ${idx + 1}`}
                         >
                             <img

@@ -7,23 +7,23 @@ export default function PreviewPrice({ price }: { price: VariantPrice }) {
   }
 
   return (
-    <>
+    <div className="flex items-baseline gap-x-2">
       {price.price_type === "sale" && (
         <Text
-          className="line-through text-ui-fg-muted"
+          className="text-xs text-surface-on-variant line-through"
           data-testid="original-price"
         >
           {price.original_price}
         </Text>
       )}
       <Text
-        className={clx("text-ui-fg-muted", {
-          "text-ui-fg-interactive": price.price_type === "sale",
+        className={clx("text-sm font-semibold text-surface-on whitespace-nowrap", {
+          "text-primary-container": price.price_type === "sale",
         })}
         data-testid="price"
       >
         {price.calculated_price}
       </Text>
-    </>
+    </div>
   )
 }

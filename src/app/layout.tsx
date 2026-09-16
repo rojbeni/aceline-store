@@ -17,7 +17,14 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const langCode = locale ? locale.split("-")[0].toLowerCase() : "en"
 
   return (
-    <html lang={langCode} className="dark" suppressHydrationWarning>
+    <html lang={langCode} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t="dark"}var r=document.documentElement;r.classList.toggle("dark",t==="dark");r.setAttribute("data-mode",t)}catch(e){document.documentElement.classList.add("dark")}})();`,
+          }}
+        />
+      </head>
       <body className={font.className}>
         <TranslationProvider locale={locale}>
           <main className="relative flex flex-col min-h-screen">{props.children}</main>

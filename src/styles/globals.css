@@ -6,20 +6,20 @@
   :root {
     --primary: #101319;
     --primary-foreground: #ffffff;
-    --primary-container: #1c1b1b;
-    --on-primary-container: #858383;
+    --primary-container: #c3f400;
+    --on-primary-container: #3d4d00;
     --surface: #ffffff;
-    --surface-dim: #f9fafb;
-    --surface-bright: #e5e7eb;
+    --surface-dim: #f2f3f6;
+    --surface-bright: #ffffff;
     --surface-container-lowest: #ffffff;
-    --surface-container-low: #f3f4f6;
-    --surface-container: #eeeeee;
-    --surface-container-high: #e5e7eb;
-    --surface-container-highest: #e2e2e2;
+    --surface-container-low: #f7f8fa;
+    --surface-container: #f0f1f4;
+    --surface-container-high: #e8e9ed;
+    --surface-container-highest: #dfe1e6;
     --on-surface: #101319;
-    --on-surface-variant: #444748;
-    --outline: #747878;
-    --outline-variant: #c4c7c7;
+    --on-surface-variant: #53565f;
+    --outline: #75787f;
+    --outline-variant: #c8cbd1;
     --foreground: #101319;
     --border: #e5e7eb;
   }
