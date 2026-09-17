@@ -14,18 +14,7 @@ export default function ProductPreview({
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
 }) {
-  // const pricedProduct = await listProducts({
-  //   regionId: region.id,
-  //   queryParams: { id: [product.id!] },
-  // }).then(({ response }) => response.products[0])
-
-  // if (!pricedProduct) {
-  //   return null
-  // }
-
-  const { cheapestPrice } = getProductPrice({
-    product,
-  })
+  const { cheapestPrice } = getProductPrice({product,})
 
   const discountPercentage =
     cheapestPrice?.price_type === "sale"
@@ -44,7 +33,7 @@ export default function ProductPreview({
       <div data-testid="product-wrapper">
         <div className="relative">
           {discountPercentage ? (
-            <span className="absolute top-3 left-3 z-20 rounded-full bg-primary-container px-2.5 py-1 text-xs font-semibold text-on-primary-container">
+            <span className="absolute top-3 left-3 z-20 rounded-full bg-primary-container px-2.5 py-1 text-xs font-semibold text-primary-on-container">
               -{discountPercentage}%
             </span>
           ) : null}
@@ -53,6 +42,7 @@ export default function ProductPreview({
             images={product.images}
             size="full"
             isFeatured={isFeatured}
+            aspectRatio={isFeatured ? undefined : "aspect-[3/4]"}
           />
           {sizes.length > 0 ? (
             <div className="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-3 rounded-large bg-black/70 p-4 opacity-0 scale-95 transition-all duration-200 ease-out [@media(hover:hover)]:flex [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:scale-100">
@@ -72,10 +62,10 @@ export default function ProductPreview({
             </div>
           ) : null}
         </div>
-        <div className="flex flex-col mt-3 gap-y-1">
+        <div className="flex flex-col mt-2 gap-y-1">
           {brand ? (
             <Text
-              className="text-on-surface-variant truncate text-xsmall-regular uppercase tracking-wide"
+              className="text-surface-on-variant truncate text-xsmall-regular uppercase tracking-wide"
               data-testid="product-brand"
             >
               {brand}
@@ -86,29 +76,27 @@ export default function ProductPreview({
               {sizes.map((size) => (
                 <span
                   key={size}
-                  className="rounded-full border border-outline-variant px-2 py-0.5 text-xsmall-regular text-on-surface-variant"
+                  className="rounded-full border border-outline-variant px-2 py-0.5 text-xsmall-regular text-surface-on-variant"
                 >
                   {size}
                 </span>
               ))}
             </div>
           ) : null}
-          <div className="flex items-start justify-between gap-x-3">
+          <div className="flex flex-col items-center gap-y-1 text-center">
             <Text
-              className="text-surface-on truncate min-w-0 text-sm font-medium"
+              className="text-surface-on w-full truncate text-sm font-medium"
               data-testid="product-title"
             >
               {product.title}
             </Text>
-            <div className="flex items-center gap-x-2 flex-shrink-0">
-              {cheapestPrice ? (
-                <PreviewPrice price={cheapestPrice} />
-              ) : (
-                <Text className="text-surface-on-variant text-small-regular whitespace-nowrap">
-                  Price unavailable
-                </Text>
-              )}
-            </div>
+            {cheapestPrice ? (
+              <PreviewPrice price={cheapestPrice} />
+            ) : (
+              <Text className="text-surface-on-variant text-small-regular whitespace-nowrap">
+                Price unavailable
+              </Text>
+            )}
           </div>
         </div>
       </div>

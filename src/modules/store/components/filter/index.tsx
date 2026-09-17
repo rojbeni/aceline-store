@@ -9,18 +9,23 @@ export type FilterItem = {
   label: string
 }
 
+export type OptionFilterGroup = {
+  title: string
+  items: FilterItem[]
+}
+
 export type ProductFilter = {
   categoryId?: string
-  variant?: string
+  options?: Record<string, string>
 }
 
 type FilterProps = {
   categories: FilterItem[]
   selectedCategory: string
   onCategoryChange: (value: string) => void
-  variants: FilterItem[]
-  selectedVariant: string
-  onVariantChange: (value: string) => void
+  optionGroups: OptionFilterGroup[]
+  selectedOptions: Record<string, string>
+  onOptionChange: (title: string, value: string) => void
   "data-testid"?: string
 }
 
@@ -28,12 +33,12 @@ const Filter = ({
   categories,
   selectedCategory,
   onCategoryChange,
-  variants,
-  selectedVariant,
-  onVariantChange,
+  optionGroups,
+  selectedOptions,
+  onOptionChange,
   "data-testid": dataTestId,
 }: FilterProps) => {
-  if (categories.length === 0 && variants.length === 0) {
+  if (categories.length === 0 && optionGroups.length === 0) {
     return null
   }
 
@@ -57,17 +62,21 @@ const Filter = ({
           data-testid="category-filter"
         />
       )}
-      {variants.length > 0 && (
+      {optionGroups.map((group) => (
         <FilterRadioGroup
-          title="Variant"
-          items={[{ value: "all", label: "All Variants" }, ...variants]}
-          value={selectedVariant || "all"}
+          key={group.title}
+          title={group.title}
+          items={[
+            { value: "all", label: `All ${group.title}` },
+            ...group.items,
+          ]}
+          value={selectedOptions[group.title] || "all"}
           handleChange={(value) =>
-            onVariantChange(value === "all" ? "" : value)
+            onOptionChange(group.title, value === "all" ? "" : value)
           }
-          data-testid="variant-filter"
+          data-testid={`${group.title.toLowerCase()}-filter`}
         />
-      )}
+      ))}
     </div>
   )
 }

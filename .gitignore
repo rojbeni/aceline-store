@@ -1,7 +1,60 @@
 # Dependencies
 node_modules
-.next
-.claude
+.pnp
+.pnp.js
 
+# Next.js
+.next
+/out/
+next-env.d.ts
+
+# Production build
+/build
+
+# Turbopack / bundler caches
+.turbo
+.swc
+/analyze
+
+# next-sitemap generated output
+/public/sitemap.xml
+/public/sitemap-*.xml
+/public/robots.txt
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+/coverage
+
+# Env files
+.env
 .env.local
+.env.*.local
+.env.remote
 .env.template
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Editor / IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Misc
+.claude
+*.pem
+.vercel

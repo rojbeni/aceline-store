@@ -9,6 +9,8 @@ type ThumbnailProps = {
   images?: { url?: string }[] | null
   size?: "small" | "medium" | "large" | "full" | "square"
   isFeatured?: boolean
+  /** Overrides the default aspect-ratio class chosen from `size`/`isFeatured`. */
+  aspectRatio?: string
   className?: string
   "data-testid"?: string
 }
@@ -18,6 +20,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   images,
   size = "small",
   isFeatured,
+  aspectRatio,
   className,
   "data-testid": dataTestid,
 }) => {
@@ -28,10 +31,12 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
       className={clx(
         "relative w-full overflow-hidden p-4 bg-ui-bg-subtle shadow-elevation-card-rest rounded-large group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
         className,
-        {
+        aspectRatio ?? {
           "aspect-[11/14]": isFeatured,
           "aspect-[9/16]": !isFeatured && size !== "square",
           "aspect-[1/1]": size === "square",
+        },
+        {
           "w-[180px]": size === "small",
           "w-[290px]": size === "medium",
           "w-[440px]": size === "large",

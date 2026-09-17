@@ -6,7 +6,7 @@ export default function BentoGrid() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
         {/* Pro Performance Rackets */}
         <div className="md:col-span-8 relative group overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant performance-card transition-all duration-300 min-h-[300px] md:min-h-0">
-          <LocalizedClientLink href="/store" className="absolute inset-0 z-20" />
+          <LocalizedClientLink href="/categories/rackets" className="absolute inset-0 z-20" />
           <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end bg-gradient-to-t from-black/60 to-transparent">
             <h3 className="text-2xl md:text-3xl font-semibold text-white mb-2">Pro Performance Rackets</h3>
             <p className="text-white/80 text-sm md:text-base max-w-md">Certified pre-owned frames from Wilson, Babolat, and Head.</p>
@@ -33,7 +33,7 @@ export default function BentoGrid() {
 
           {/* Accessories */}
           <div className="relative group overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant performance-card transition-all duration-300">
-            <LocalizedClientLink href="/store" className="absolute inset-0 z-20" />
+            <LocalizedClientLink href="/categories/accessories" className="absolute inset-0 z-20" />
             <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end bg-gradient-to-t from-black/50 to-transparent">
               <h3 className="text-xl md:text-2xl font-semibold text-white">Accessories</h3>
             </div>
