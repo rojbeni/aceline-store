@@ -46,9 +46,6 @@ export default function ProductPreview({
           />
           {sizes.length > 0 ? (
             <div className="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-3 rounded-large bg-black/70 p-4 opacity-0 scale-95 transition-all duration-200 ease-out [@media(hover:hover)]:flex [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:scale-100">
-              <span className="text-xsmall-regular uppercase tracking-wider text-white/70">
-                Select size
-              </span>
               <div className="flex flex-wrap justify-center gap-2">
                 {sizes.map((size) => (
                   <span

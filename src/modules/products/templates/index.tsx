@@ -11,6 +11,7 @@ import { HttpTypes } from "@medusajs/types"
 
 import ProductActionsWrapper from "./product-actions-wrapper"
 import Carousel from "@modules/common/components/carousel"
+import TrustBadgeRow from "@modules/common/components/trust-badge-row"
 
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
@@ -32,16 +33,17 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
   return (
     <>
       <div
-        className="content-container flex flex-col small:flex-row small:items-start relative gap-y-8 small:gap-x-12 medium:gap-x-16 py-8"
+        className="content-container grid grid-cols-1 gap-y-6 py-6 small:grid-cols-[minmax(0,520px)_minmax(0,380px)] small:justify-center small:items-start small:gap-x-10 medium:gap-x-12"
         data-testid="product-container"
       >
-        {/* Left Column: Product Gallery */}
-        <div className="block w-full small:flex-1 relative">
-          <Carousel images={images.map((img) => img.url!)} />
+        <div className="block w-full relative">
+          <Carousel
+            images={images.map((img) => img.url!)}
+            alt={product.title}
+          />
         </div>
 
-        {/* Right Column: Sticky Product Actions and details */}
-        <div className="flex flex-col small:sticky small:top-28 w-full small:max-w-[400px] medium:max-w-[440px] py-4 gap-y-8">
+        <div className="flex flex-col small:sticky small:top-20 w-full py-3 gap-y-6">
           <ProductOnboardingCta />
           <ProductInfo product={product} />
           <div className="h-px bg-border/40 w-full" />
@@ -66,9 +68,6 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         className="content-container"
         data-testid="related-products-container"
       >
-        <Suspense fallback={<SkeletonRelatedProducts />}>
-          <RelatedProducts product={product} countryCode={countryCode} />
-        </Suspense>
       </div>
     </>
   )

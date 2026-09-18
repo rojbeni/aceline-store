@@ -105,15 +105,6 @@ export default function PaginatedProducts({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-6">
-        <Text
-          className="text-surface-on-variant text-small-regular"
-          data-testid="products-count"
-        >
-          {filteredProducts.length}{" "}
-          {filteredProducts.length === 1 ? "product" : "products"}
-        </Text>
-      </div>
       {filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-y-1 rounded-large border border-outline-variant bg-surface-container-low px-6 py-24 text-center">
           <Text className="text-surface-on text-base-semi">

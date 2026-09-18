@@ -169,10 +169,10 @@ export default function ProductActions({
 
   return (
     <>
-      <div className="flex flex-col gap-y-2" ref={actionsRef}>
+      <div className="flex flex-col gap-y-3" ref={actionsRef}>
         <div>
           {product.variants && (
-            <div className="flex flex-col gap-y-4">
+            <div className="flex flex-col gap-y-3">
               {(product.options || []).map((option) => {
                 return (
                   <div key={option.id}>
@@ -207,7 +207,7 @@ export default function ProductActions({
             !isValidVariant
           }
           variant="primary"
-          className="w-full h-12 text-base font-semibold uppercase tracking-wider rounded-xl transition-all duration-300 transform active:scale-[0.98] hover:scale-[1.01] hover:shadow-lg dark:hover:neon-glow"
+          className="w-full h-10 text-small-semi uppercase tracking-wider rounded-lg transition-all duration-300 transform active:scale-[0.98] hover:scale-[1.01] hover:shadow-lg dark:hover:neon-glow"
           isLoading={isAdding}
           data-testid="add-product-button"
         >

@@ -24,12 +24,12 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   const filteredOptions = (option.values ?? []).map((v) => v.value)
 
   return (
-    <div className="flex flex-col gap-y-3">
-      <span className="text-xs font-semibold uppercase tracking-wider text-ui-fg-subtle">
+    <div className="flex flex-col gap-y-2">
+      <span className="text-xsmall-regular font-semibold uppercase tracking-wider text-surface-on-variant">
         Select {title}
       </span>
       <div
-        className="flex flex-wrap gap-3"
+        className="flex flex-wrap gap-2"
         data-testid={dataTestId}
       >
         {filteredOptions.map((v) => {
@@ -39,13 +39,13 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
               onClick={() => updateOption(option.id, v)}
               key={v}
               className={clx(
-                "border text-sm font-medium h-11 rounded-xl px-4 flex-1 transition-all duration-200 ease-in-out hover:scale-[1.02] disabled:opacity-50 disabled:pointer-events-none min-w-[60px]",
+                "border text-small-regular font-medium h-9 rounded-lg px-3 flex-1 transition-all duration-200 ease-in-out hover:scale-[1.02] disabled:opacity-50 disabled:pointer-events-none min-w-[52px] cursor-pointer",
                 {
-                  "border-primary-container bg-ui-bg-base text-ui-fg-base font-semibold ring-1 ring-primary-container":
+                  "border-primary-container bg-surface-container-high text-surface-on font-semibold ring-1 ring-primary-container":
                     v === current,
-                  "border-ui-border-base bg-ui-bg-subtle text-ui-fg-subtle hover:border-ui-border-interactive hover:text-ui-fg-base hover:bg-ui-bg-base/50":
+                  "border-outline-variant bg-surface-container-low text-surface-on-variant hover:border-outline hover:text-surface-on hover:bg-surface-container":
                     v !== current && !isCurrentValDisabled,
-                  "opacity-40 cursor-not-allowed line-through border-ui-border-base bg-ui-bg-subtle text-ui-fg-muted":
+                  "opacity-40 cursor-not-allowed line-through border-outline-variant bg-surface-container-low text-surface-on-variant":
                     isCurrentValDisabled,
                 }
               )}
