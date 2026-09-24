@@ -1,9 +1,7 @@
 import { listProducts } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
-import { Heading } from "@modules/common/components/ui"
 
-import InteractiveLink from "@modules/common/components/interactive-link"
-import ProductPreview from "@modules/products/components/product-preview"
+import ProductRailCarousel from "./product-rail-carousel"
 
 export default async function ProductRail({
   collection,
@@ -22,28 +20,16 @@ export default async function ProductRail({
     },
   })
 
-  if (!pricedProducts) {
+  if (!pricedProducts?.length) {
     return null
   }
 
   return (
-    <div className="content-container py-12 small:py-24">
-      <div className="flex justify-between items-center mb-8">
-        <Heading level="h2" className="text-2xl md:text-3xl text-primary">
-          {collection.title}
-        </Heading>
-        <InteractiveLink href={`/collections/${collection.handle}`}>
-          View all
-        </InteractiveLink>
-      </div>
-      <ul className="grid grid-cols-2 small:grid-cols-3 gap-x-6 gap-y-24 small:gap-y-36">
-        {pricedProducts &&
-          pricedProducts.map((product) => (
-            <li key={product.id}>
-              <ProductPreview product={product} region={region} isFeatured />
-            </li>
-          ))}
-      </ul>
-    </div>
+    <ProductRailCarousel
+      title={collection.title}
+      viewAllHref={`/collections/${collection.handle}`}
+      products={pricedProducts}
+      region={region}
+    />
   )
 }

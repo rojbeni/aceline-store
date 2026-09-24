@@ -21,20 +21,36 @@ async function getMedusaRegions() {
     }
 }
 
-// Helper to fetch all active product handles from Medusa
+// Helper to fetch all active product handles from Medusa (paginated)
 async function getMedusaProducts() {
+    const limit = 100
+    let offset = 0
+    let allProducts: any[] = []
+
     try {
-        const res = await fetch(`${MEDUSA_API_URL}/store/products?limit=100`, {
-            headers: {
-                "x-publishable-api-key": PUBLISHABLE_API_KEY
-            },
-            next: { revalidate: 3600 }
-        })
-        const { products } = await res.json()
-        return products || []
+        while (true) {
+            const res = await fetch(
+                `${MEDUSA_API_URL}/store/products?limit=${limit}&offset=${offset}&fields=handle,updated_at`,
+                {
+                    headers: {
+                        "x-publishable-api-key": PUBLISHABLE_API_KEY
+                    },
+                    next: { revalidate: 3600 }
+                }
+            )
+            const { products, count } = await res.json()
+            allProducts = allProducts.concat(products || [])
+
+            offset += limit
+            if (!products?.length || offset >= (count ?? 0)) {
+                break
+            }
+        }
+
+        return allProducts
     } catch (error) {
         console.error("Failed to fetch products for sitemap:", error)
-        return []
+        return allProducts
     }
 }
 

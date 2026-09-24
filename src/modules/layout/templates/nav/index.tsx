@@ -1,28 +1,35 @@
 import { Suspense } from "react"
 
+import { listCategories } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
+import MegaMenu from "@modules/layout/components/mega-menu"
 import MobileMenu from "@modules/layout/components/mobile-menu"
 import ThemeToggle from "@modules/layout/components/theme-toggle"
 import { CircleUser, ShoppingCart } from 'lucide-react';
-import { ArrowRightMini } from "@medusajs/icons"
-import { Button } from "@modules/common/components/ui"
+
 export default async function Nav() {
+  const categories = await listCategories()
+  const topLevelCategories = categories.filter(
+    (category) => !category.parent_category
+  )
+
   return (
     <div >
       <header className="relative h-16 mx-auto border-b duration-200 border-ui-border-base">
         <nav className="content-container flex items-center justify-between w-full h-full">
-          <div className="flex-1 basis-0 h-full flex items-center">
+          <div className="flex items-center h-full gap-x-8">
             <LocalizedClientLink
               className="hover:text-ui-fg-base"
               href="/"
-              data-testid="nav-account-link"
-            > 
+              data-testid="nav-logo-link"
+            >
               Aceline Store
             </LocalizedClientLink>
+            <MegaMenu categories={topLevelCategories} />
           </div>
 
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
+          <div className="flex items-center gap-x-6 h-full justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
               <ThemeToggle />
               <LocalizedClientLink
@@ -36,7 +43,7 @@ export default async function Nav() {
             <div className="small:hidden">
               <ThemeToggle />
             </div>
-            <MobileMenu />
+            <MobileMenu categories={topLevelCategories} />
             <Suspense
               fallback={
                 <LocalizedClientLink
@@ -51,14 +58,6 @@ export default async function Nav() {
               }
             >
               <CartButton />
-
-              <LocalizedClientLink href="/store">
-                <Button variant="primary" className="rounded-full flex items-center justify-center">
-                  Shop
-                  <ArrowRightMini className="group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </LocalizedClientLink>
-
             </Suspense>
           </div>
         </nav>

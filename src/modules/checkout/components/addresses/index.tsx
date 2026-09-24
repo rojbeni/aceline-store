@@ -95,79 +95,77 @@ const Addresses = ({
         <div>
           <div className="text-small-regular">
             {cart && cart.shipping_address ? (
-              <div className="flex items-start gap-x-8">
-                <div className="flex items-start gap-x-1 w-full">
-                  <div
-                    className="flex flex-col w-1/3"
-                    data-testid="shipping-address-summary"
-                  >
-                    <Text className="text-ui-fg-base mb-1">
-                      {t("Shipping Address")}
-                    </Text>
-                    <Text className="text-ui-fg-subtle">
-                      {cart.shipping_address.first_name}{" "}
-                      {cart.shipping_address.last_name}
-                    </Text>
-                    <Text className="text-ui-fg-subtle">
-                      {cart.shipping_address.address_1}{" "}
-                      {cart.shipping_address.address_2}
-                    </Text>
-                    <Text className="text-ui-fg-subtle">
-                      {cart.shipping_address.postal_code},{" "}
-                      {cart.shipping_address.city}
-                    </Text>
-                    <Text className="text-ui-fg-subtle">
-                      {cart.shipping_address.country_code?.toUpperCase()}
-                    </Text>
-                  </div>
+              <div className="flex flex-col small:flex-row items-start gap-4 small:gap-x-8">
+                <div
+                  className="flex flex-col w-full small:w-1/3"
+                  data-testid="shipping-address-summary"
+                >
+                  <Text className="text-ui-fg-base mb-1">
+                    {t("Shipping Address")}
+                  </Text>
+                  <Text className="text-ui-fg-subtle">
+                    {cart.shipping_address.first_name}{" "}
+                    {cart.shipping_address.last_name}
+                  </Text>
+                  <Text className="text-ui-fg-subtle">
+                    {cart.shipping_address.address_1}{" "}
+                    {cart.shipping_address.address_2}
+                  </Text>
+                  <Text className="text-ui-fg-subtle">
+                    {cart.shipping_address.postal_code},{" "}
+                    {cart.shipping_address.city}
+                  </Text>
+                  <Text className="text-ui-fg-subtle">
+                    {cart.shipping_address.country_code?.toUpperCase()}
+                  </Text>
+                </div>
 
-                  <div
-                    className="flex flex-col w-1/3 "
-                    data-testid="shipping-contact-summary"
-                  >
-                    <Text className="text-ui-fg-base mb-1">
-                      {t("Contact")}
-                    </Text>
-                    <Text className="text-ui-fg-subtle">
-                      {cart.shipping_address.phone}
-                    </Text>
-                    <Text className="text-ui-fg-subtle">
-                      {cart.email}
-                    </Text>
-                  </div>
+                <div
+                  className="flex flex-col w-full small:w-1/3"
+                  data-testid="shipping-contact-summary"
+                >
+                  <Text className="text-ui-fg-base mb-1">
+                    {t("Contact")}
+                  </Text>
+                  <Text className="text-ui-fg-subtle">
+                    {cart.shipping_address.phone}
+                  </Text>
+                  <Text className="text-ui-fg-subtle">
+                    {cart.email}
+                  </Text>
+                </div>
 
-                  <div
-                    className="flex flex-col w-1/3"
-                    data-testid="billing-address-summary"
-                  >
-                    <Text className="text-ui-fg-base mb-1">
-                      {t("Billing Address")}
-                    </Text>
+                <div
+                  className="flex flex-col w-full small:w-1/3"
+                  data-testid="billing-address-summary"
+                >
+                  <Text className="text-ui-fg-base mb-1">
+                    {t("Billing Address")}
+                  </Text>
 
-                    {sameAsBilling ? (
+                  {sameAsBilling ? (
+                    <Text className="text-ui-fg-subtle">
+                      {t("Billing and delivery address are the same.")}
+                    </Text>
+                  ) : (
+                    <>
                       <Text className="text-ui-fg-subtle">
-                        {t("Billing and delivery address are the same.")}
+                        {cart.billing_address?.first_name}{" "}
+                        {cart.billing_address?.last_name}
                       </Text>
-                    ) : (
-                      <>
-                        <Text className="text-ui-fg-subtle">
-                          {cart.billing_address?.first_name}{" "}
-                          {cart.billing_address?.last_name}
-                        </Text>
-                        <Text className="text-ui-fg-subtle">
-                          {cart.billing_address?.address_1}{" "}
-                          {cart.billing_address?.address_2}
-                        </Text>
-                        <Text className="text-ui-fg-subtle">
-                          {cart.billing_address?.postal_code},{" "}
-                          {cart.billing_address?.city}
-                        </Text>
-                        <Text className="text-ui-fg-subtle">
-                          {cart.billing_address?.country_code?.toUpperCase()}
-                        </Text>
-                      </>
-                    )}
-                  </div>
+                      <Text className="text-ui-fg-subtle">
+                        {cart.billing_address?.address_1}{" "}
+                        {cart.billing_address?.address_2}
+                      </Text>
+                      <Text className="text-ui-fg-subtle">
+                        {cart.billing_address?.postal_code},{" "}
+                        {cart.billing_address?.city}
+                      </Text>
+                      <Text className="text-ui-fg-subtle">
+                        {cart.billing_address?.country_code?.toUpperCase()}
+                      </Text>
+                    </>
+                  )}
                 </div>
               </div>
             ) : (

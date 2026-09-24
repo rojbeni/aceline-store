@@ -5,10 +5,12 @@ import { HttpTypes } from "@medusajs/types"
 
 import { listProductsWithSort } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
+import { getProductPrice } from "@lib/util/get-product-price"
 import { clx, Text } from "@modules/common/components/ui"
 import ProductPreview from "@modules/products/components/product-preview"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import { OptionFilterGroup, ProductFilter } from "@modules/store/components/filter"
+import { PriceBounds } from "@modules/store/components/filter/price-filter"
 import { SortOptions } from "@modules/store/components/sort"
 
 type PaginatedProductsProps = {
@@ -17,6 +19,7 @@ type PaginatedProductsProps = {
   countryCode: string
   filter?: ProductFilter
   onOptionGroupsChange?: (groups: OptionFilterGroup[]) => void
+  onPriceBoundsChange?: (bounds: PriceBounds | undefined) => void
 }
 
 export default function PaginatedProducts({
@@ -25,6 +28,7 @@ export default function PaginatedProducts({
   countryCode,
   filter,
   onOptionGroupsChange,
+  onPriceBoundsChange,
 }: PaginatedProductsProps) {
   const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
   const [region, setRegion] = useState<HttpTypes.StoreRegion>()
@@ -32,6 +36,7 @@ export default function PaginatedProducts({
 
   const categoryId = filter?.categoryId
   const selectedOptions = filter?.options
+  const priceRange = filter?.priceRange
 
   useEffect(() => {
     startTransition(async () => {
@@ -76,28 +81,70 @@ export default function PaginatedProducts({
     )
   }, [products, onOptionGroupsChange])
 
+  const cheapestPriceByProductId = useMemo(() => {
+    const map = new Map<string, { amount: number; currencyCode: string }>()
+    products.forEach((p) => {
+      const cheapest = getProductPrice({ product: p }).cheapestPrice
+      if (cheapest) {
+        map.set(p.id, {
+          amount: cheapest.calculated_price_number,
+          currencyCode: cheapest.currency_code,
+        })
+      }
+    })
+    return map
+  }, [products])
+
+  useEffect(() => {
+    if (!onPriceBoundsChange) return
+
+    const amounts = Array.from(cheapestPriceByProductId.values())
+    if (amounts.length === 0) {
+      onPriceBoundsChange(undefined)
+      return
+    }
+
+    onPriceBoundsChange({
+      min: Math.floor(Math.min(...amounts.map((a) => a.amount))),
+      max: Math.ceil(Math.max(...amounts.map((a) => a.amount))),
+      currencyCode: amounts[0].currencyCode,
+    })
+  }, [cheapestPriceByProductId, onPriceBoundsChange])
+
   const filteredProducts = useMemo(() => {
-    const activeFilters = Object.entries(selectedOptions ?? {}).filter(
+    const activeOptionFilters = Object.entries(selectedOptions ?? {}).filter(
       ([, value]) => value
     )
-    if (activeFilters.length === 0) return products
 
     return products.filter((p) => {
-      const optionTitleById = new Map(
-        p.options?.map((option) => [option.id, option.title]) ?? []
-      )
+      if (activeOptionFilters.length > 0) {
+        const optionTitleById = new Map(
+          p.options?.map((option) => [option.id, option.title]) ?? []
+        )
 
-      return activeFilters.every(([title, value]) =>
-        p.variants?.some((variant) =>
-          variant.options?.some(
-            (optionValue) =>
-              optionValue.value === value &&
-              optionTitleById.get(optionValue.option_id ?? "") === title
+        const matchesOptions = activeOptionFilters.every(([title, value]) =>
+          p.variants?.some((variant) =>
+            variant.options?.some(
+              (optionValue) =>
+                optionValue.value === value &&
+                optionTitleById.get(optionValue.option_id ?? "") === title
+            )
           )
         )
-      )
+
+        if (!matchesOptions) return false
+      }
+
+      if (priceRange?.min !== undefined || priceRange?.max !== undefined) {
+        const price = cheapestPriceByProductId.get(p.id)?.amount
+        if (price === undefined) return false
+        if (priceRange.min !== undefined && price < priceRange.min) return false
+        if (priceRange.max !== undefined && price > priceRange.max) return false
+      }
+
+      return true
     })
-  }, [products, selectedOptions])
+  }, [products, selectedOptions, priceRange, cheapestPriceByProductId])
 
   if ((isPending && products.length === 0) || !region) {
     return <SkeletonProductGrid />

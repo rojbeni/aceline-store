@@ -2,6 +2,8 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
+import { getBaseURL } from "@lib/util/env"
+import { getProductPrice } from "@lib/util/get-product-price"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
 
@@ -86,13 +88,55 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound()
   }
 
+  const description =
+    product.description?.slice(0, 155).trim() ||
+    `${product.title} — shop it now at Aceline Store.`
+  const canonical = `/${params.countryCode}/products/${product.handle}`
+
   return {
-    title: `${product.title} | Aceline Store`,
-    description: `${product.title}`,
+    title: product.title,
+    description,
+    alternates: {
+      canonical,
+    },
     openGraph: {
-      title: `${product.title} | Aceline Store`,
-      description: `${product.title}`,
+      title: product.title,
+      description,
+      url: canonical,
+      type: "website",
       images: product.thumbnail ? [product.thumbnail] : [],
+    },
+  }
+}
+
+function getProductJsonLd(
+  product: HttpTypes.StoreProduct,
+  countryCode: string
+) {
+  const { cheapestPrice } = getProductPrice({ product })
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description || product.title,
+    image: product.images?.map((img) => img.url).filter(Boolean),
+    sku: product.variants?.[0]?.sku ?? undefined,
+    brand: product.collection?.title
+      ? { "@type": "Brand", name: product.collection.title }
+      : undefined,
+    offers: {
+      "@type": "Offer",
+      url: `${getBaseURL()}/${countryCode}/products/${product.handle}`,
+      priceCurrency: cheapestPrice?.currency_code?.toUpperCase(),
+      price: cheapestPrice
+        ? cheapestPrice.calculated_price_number.toFixed(2)
+        : undefined,
+      availability: product.variants?.some(
+        (v) => !v.manage_inventory || v.allow_backorder || (v.inventory_quantity ?? 0) > 0
+      )
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
     },
   }
 }
@@ -120,11 +164,22 @@ export default async function ProductPage(props: Props) {
   }
 
   return (
-    <ProductTemplate
-      product={pricedProduct}
-      region={region}
-      countryCode={params.countryCode}
-      images={images ?? []}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            getProductJsonLd(pricedProduct, params.countryCode)
+          ).replace(/</g, "\\u003c"),
+        }}
+      />
+      <ProductTemplate
+        product={pricedProduct}
+        region={region}
+        countryCode={params.countryCode}
+        images={images ?? []}
+      />
+    </>
   )
 }

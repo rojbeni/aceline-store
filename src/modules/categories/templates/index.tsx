@@ -1,6 +1,11 @@
+"use client"
+
+import { useCallback, useMemo, useState } from "react"
 import { notFound } from "next/navigation"
 
 import InteractiveLink from "@modules/common/components/interactive-link"
+import Filter, { OptionFilterGroup } from "@modules/store/components/filter"
+import { PriceBounds, PriceRange } from "@modules/store/components/filter/price-filter"
 import ProductSort, { SortOptions } from "@modules/store/components/sort"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -19,6 +24,30 @@ export default function CategoryTemplate({
 }) {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
+
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
+  const [optionGroups, setOptionGroups] = useState<OptionFilterGroup[]>([])
+  const [priceRange, setPriceRange] = useState<PriceRange>({})
+  const [priceBounds, setPriceBounds] = useState<PriceBounds>()
+
+  const handleOptionChange = useCallback((title: string, value: string) => {
+    setSelectedOptions((prev) => {
+      if (!value) {
+        const { [title]: _removed, ...rest } = prev
+        return rest
+      }
+      return { ...prev, [title]: value }
+    })
+  }, [])
+
+  const filter = useMemo(
+    () => ({
+      categoryId: category?.id,
+      options: selectedOptions,
+      priceRange,
+    }),
+    [category?.id, selectedOptions, priceRange]
+  )
 
   if (!category || !countryCode) notFound()
 
@@ -63,7 +92,7 @@ export default function CategoryTemplate({
             <p>{category.description}</p>
           </div>
         )}
-        {category.category_children && (
+        {category.category_children && category.category_children.length > 0 && (
           <div className="mb-8 text-base-large">
             <ul className="grid grid-cols-1 gap-2">
               {category.category_children?.map((c) => (
@@ -76,11 +105,28 @@ export default function CategoryTemplate({
             </ul>
           </div>
         )}
-        <PaginatedProducts
-          sortBy={sort}
-          page={pageNumber}
-          countryCode={countryCode}
-        />
+        <div className="flex flex-col small:flex-row small:items-start gap-8">
+          <Filter
+            categories={[]}
+            selectedCategory=""
+            onCategoryChange={() => {}}
+            optionGroups={optionGroups}
+            selectedOptions={selectedOptions}
+            onOptionChange={handleOptionChange}
+            priceBounds={priceBounds}
+            priceRange={priceRange}
+            onPriceRangeChange={setPriceRange}
+            data-testid="category-filters"
+          />
+          <PaginatedProducts
+            sortBy={sort}
+            page={pageNumber}
+            countryCode={countryCode}
+            filter={filter}
+            onOptionGroupsChange={setOptionGroups}
+            onPriceBoundsChange={setPriceBounds}
+          />
+        </div>
       </div>
     </div>
   )

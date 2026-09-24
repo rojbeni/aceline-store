@@ -9,9 +9,11 @@ import BentoGrid from "@modules/home/components/bento-grid"
 import Philosophy from "@modules/home/components/philosophy"
 
 export const metadata: Metadata = {
-  title: "aceline store",
+  title: {
+    absolute: "Aceline Store | Premium Second-Hand Tennis Gear",
+  },
   description:
-    "A performant storefront for premium second-hand tennis gear.",
+    "Shop authenticated, second-hand tennis gear from Nike, Wilson, Asics and more — inspected, sustainable, and priced for players.",
 }
 
 export default async function Home(props: {
@@ -32,8 +34,9 @@ export default async function Home(props: {
 
   return (
     <>
-      <div className="content-container flex flex-col small:flex-row pt-6 gap-6">
-        <Hero />
+      <Hero />
+
+      <div className="content-container py-12">
         <BentoGrid />
       </div>
 

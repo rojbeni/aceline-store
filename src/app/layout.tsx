@@ -10,6 +10,10 @@ const font = Geist({ subsets: ['latin'], weight: ['200'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
+  title: {
+    default: "Aceline Store",
+    template: "%s | Aceline Store",
+  },
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

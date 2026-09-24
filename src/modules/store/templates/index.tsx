@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 
 import Filter, { OptionFilterGroup } from "@modules/store/components/filter"
+import { PriceBounds, PriceRange } from "@modules/store/components/filter/price-filter"
 
 import PaginatedProducts from "./paginated-products"
 
@@ -17,10 +18,13 @@ const StoreTemplate = ({
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
   const [optionGroups, setOptionGroups] = useState<OptionFilterGroup[]>([])
+  const [priceRange, setPriceRange] = useState<PriceRange>({})
+  const [priceBounds, setPriceBounds] = useState<PriceBounds>()
 
   const handleCategoryChange = useCallback((value: string) => {
     setSelectedCategory(value)
     setSelectedOptions({})
+    setPriceRange({})
   }, [])
 
   const handleOptionChange = useCallback((title: string, value: string) => {
@@ -37,8 +41,9 @@ const StoreTemplate = ({
     () => ({
       categoryId: selectedCategory || undefined,
       options: selectedOptions,
+      priceRange,
     }),
-    [selectedCategory, selectedOptions]
+    [selectedCategory, selectedOptions, priceRange]
   )
 
   const categoryOptions = useMemo(
@@ -56,6 +61,9 @@ const StoreTemplate = ({
           optionGroups={optionGroups}
           selectedOptions={selectedOptions}
           onOptionChange={handleOptionChange}
+          priceBounds={priceBounds}
+          priceRange={priceRange}
+          onPriceRangeChange={setPriceRange}
           data-testid="store-filters"
         />
         <PaginatedProducts
@@ -63,6 +71,7 @@ const StoreTemplate = ({
           countryCode={countryCode}
           filter={filter}
           onOptionGroupsChange={setOptionGroups}
+          onPriceBoundsChange={setPriceBounds}
         />
       </div>
     </div>

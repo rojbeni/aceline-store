@@ -1,7 +1,7 @@
 import { Text, clx } from "@modules/common/components/ui"
 
 type FilterChipGroupProps = {
-  title: string
+  title?: string
   items: {
     value: string
     label: string
@@ -20,9 +20,11 @@ const FilterChipGroup = ({
 }: FilterChipGroupProps) => {
   return (
     <div className="flex flex-col gap-y-2" data-testid={dataTestId}>
-      <Text className="text-xs font-semibold uppercase tracking-wider text-surface-on-variant">
-        {title}
-      </Text>
+      {title && (
+        <Text className="text-xs font-semibold uppercase tracking-wider text-surface-on-variant">
+          {title}
+        </Text>
+      )}
       <div className="flex flex-wrap gap-2">
         {items?.map((i) => {
           const isActive = i.value === value

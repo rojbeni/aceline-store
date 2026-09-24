@@ -86,6 +86,63 @@ export const listProducts = async ({
 }
 
 /**
+ * Looks up real stock levels for a set of variants, keyed by variant ID.
+ *
+ * Cart line items don't expose `variant.inventory_quantity` — Medusa's cart
+ * endpoint doesn't compute that field the way the product listing endpoint
+ * does (confirmed: identical `+variants.inventory_quantity` field expansion
+ * works on `/store/products` but is silently dropped on `/store/carts/:id`).
+ * So callers that need real stock counts for items already in a cart (e.g.
+ * capping the quantity selector) look them up via the product endpoint
+ * instead, keyed by the variant's parent product ID.
+ */
+export const getVariantInventory = async (
+  productIds: string[]
+): Promise<
+  Record<string, { manageInventory: boolean; inventoryQuantity: number | null }>
+> => {
+  const uniqueProductIds = Array.from(new Set(productIds)).filter(Boolean)
+
+  if (uniqueProductIds.length === 0) {
+    return {}
+  }
+
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  return sdk.client
+    .fetch<{ products: HttpTypes.StoreProduct[] }>("/store/products", {
+      method: "GET",
+      query: {
+        id: uniqueProductIds,
+        limit: uniqueProductIds.length,
+        fields: "id,variants.id,variants.manage_inventory,+variants.inventory_quantity",
+      },
+      headers,
+      cache: "no-store",
+    })
+    .then(({ products }) => {
+      const inventoryByVariantId: Record<
+        string,
+        { manageInventory: boolean; inventoryQuantity: number | null }
+      > = {}
+
+      products.forEach((product) => {
+        product.variants?.forEach((variant) => {
+          inventoryByVariantId[variant.id] = {
+            manageInventory: !!variant.manage_inventory,
+            inventoryQuantity: variant.inventory_quantity ?? null,
+          }
+        })
+      })
+
+      return inventoryByVariantId
+    })
+    .catch(() => ({}))
+}
+
+/**
  * This will fetch 100 products to the Next.js cache and sort them based on the sortBy parameter.
  * It will then return the paginated products based on the page and limit parameters.
  */

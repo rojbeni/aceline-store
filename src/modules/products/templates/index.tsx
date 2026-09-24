@@ -11,7 +11,6 @@ import { HttpTypes } from "@medusajs/types"
 
 import ProductActionsWrapper from "./product-actions-wrapper"
 import Carousel from "@modules/common/components/carousel"
-import TrustBadgeRow from "@modules/common/components/trust-badge-row"
 
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct

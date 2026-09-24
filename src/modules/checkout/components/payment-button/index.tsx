@@ -1,11 +1,11 @@
 "use client"
 
-import { isManual, isStripeLike } from "@lib/constants"
+import { isKonnect, isManual, isStripeLike } from "@lib/constants"
 import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@modules/common/components/ui"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import ErrorMessage from "../error-message"
 import { useTranslation } from "@lib/context/translation-context"
 
@@ -40,6 +40,14 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     case isManual(paymentSession?.provider_id):
       return (
         <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
+      )
+    case isKonnect(paymentSession?.provider_id):
+      return (
+        <KonnectPaymentButton
+          notReady={notReady}
+          cart={cart}
+          data-testid={dataTestId}
+        />
       )
     default:
       return <Button disabled>{t("Select a payment method")}</Button>
@@ -149,6 +157,86 @@ const StripePaymentButton = ({
       <ErrorMessage
         error={errorMessage}
         data-testid="stripe-payment-error-message"
+      />
+    </>
+  )
+}
+
+// Konnect (Tunisian gateway) is a hosted-redirect provider: the customer is
+// sent to Konnect's pay page and returns to this page afterwards.
+const getKonnectPayUrl = (data: Record<string, unknown> | undefined) => {
+  if (!data) return undefined
+  const candidate = data.payUrl ?? data.pay_url ?? data.paymentUrl ?? data.payment_url
+  return typeof candidate === "string" ? candidate : undefined
+}
+
+const KonnectPaymentButton = ({
+  cart,
+  notReady,
+  "data-testid": dataTestId,
+}: {
+  cart: HttpTypes.StoreCart
+  notReady: boolean
+  "data-testid"?: string
+}) => {
+  const { t } = useTranslation()
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const autoCompleteAttempted = useRef(false)
+
+  const session = cart.payment_collection?.payment_sessions?.find(
+    (s) => s.provider_id?.startsWith("pp_konnect")
+  )
+
+  const onPaymentCompleted = async () => {
+    await placeOrder()
+      .catch((err) => {
+        setErrorMessage(err.message)
+      })
+      .finally(() => {
+        setSubmitting(false)
+      })
+  }
+
+  // If we're back from Konnect's hosted page and the session is already
+  // authorized (confirmed server-side via webhook), complete the order.
+  useEffect(() => {
+    if (autoCompleteAttempted.current) return
+    if (session?.status === "authorized" || session?.status === "captured") {
+      autoCompleteAttempted.current = true
+      setSubmitting(true)
+      onPaymentCompleted()
+    }
+  }, [session?.status])
+
+  const payUrl = getKonnectPayUrl(session?.data as Record<string, unknown>)
+
+  const handlePayment = () => {
+    setErrorMessage(null)
+
+    if (!payUrl) {
+      setErrorMessage(t("Unable to start the Konnect payment. Please try again."))
+      return
+    }
+
+    setSubmitting(true)
+    window.location.href = payUrl
+  }
+
+  return (
+    <>
+      <Button
+        disabled={notReady || !payUrl}
+        onClick={handlePayment}
+        size="large"
+        isLoading={submitting}
+        data-testid={dataTestId}
+      >
+        {t("Pay with Konnect")}
+      </Button>
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="konnect-payment-error-message"
       />
     </>
   )
