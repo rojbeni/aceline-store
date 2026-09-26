@@ -12,6 +12,8 @@ type ThumbnailProps = {
   /** Overrides the default aspect-ratio class chosen from `size`/`isFeatured`. */
   aspectRatio?: string
   className?: string
+  /** Alt text for the image — pass the product title so it is indexable. */
+  alt?: string
   "data-testid"?: string
 }
 
@@ -22,6 +24,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   isFeatured,
   aspectRatio,
   className,
+  alt = "",
   "data-testid": dataTestid,
 }) => {
   const initialImage = thumbnail || images?.[0]?.url
@@ -45,7 +48,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
       )}
       data-testid={dataTestid}
     >
-      <ImageOrPlaceholder image={initialImage} size={size} />
+      <ImageOrPlaceholder image={initialImage} size={size} alt={alt} />
     </Container>
   )
 }
@@ -53,11 +56,12 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
 const ImageOrPlaceholder = ({
   image,
   size,
-}: Pick<ThumbnailProps, "size"> & { image?: string }) => {
+  alt,
+}: Pick<ThumbnailProps, "size"> & { image?: string; alt: string }) => {
   return image ? (
     <Image
       src={image}
-      alt="Thumbnail"
+      alt={alt}
       className="absolute inset-0 object-cover object-center transition-transform duration-300 ease-out group-hover:scale-105"
       draggable={false}
       quality={50}

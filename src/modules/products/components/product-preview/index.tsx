@@ -39,6 +39,7 @@ export default function ProductPreview({
           ) : null}
           <Thumbnail
             thumbnail={product.thumbnail}
+            alt={product.title}
             images={product.images}
             size="full"
             isFeatured={isFeatured}

@@ -1,4 +1,5 @@
 import { getBaseURL } from "@lib/util/env"
+import { DEFAULT_DESCRIPTION, SITE_NAME } from "@lib/util/seo"
 import { Metadata } from "next"
 import { Geist } from 'next/font/google';
 import "styles/globals.css"
@@ -11,8 +12,13 @@ const font = Geist({ subsets: ['latin'], weight: ['200'] });
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
   title: {
-    default: "Aceline Store",
-    template: "%s | Aceline Store",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  openGraph: {
+    siteName: SITE_NAME,
+    type: "website",
   },
 }
 

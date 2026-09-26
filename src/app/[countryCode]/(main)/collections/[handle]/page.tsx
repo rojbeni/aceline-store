@@ -3,8 +3,11 @@ import { notFound } from "next/navigation"
 
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
 import { listRegions } from "@lib/data/regions"
+import { buildAlternates } from "@lib/util/seo"
+import { getBreadcrumbJsonLd } from "@lib/util/structured-data"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
+import JsonLd from "@modules/common/components/json-ld"
 import { SortOptions } from "@modules/store/components/sort"
 
 type Props = {
@@ -58,12 +61,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound()
   }
 
-  const metadata = {
-    title: `${collection.title} | Aceline Store`,
-    description: `${collection.title} collection`,
-  } as Metadata
-
-  return metadata
+  return {
+    title: collection.title,
+    description: `Shop the ${collection.title} collection of authenticated, second-hand tennis gear at Aceline Store.`,
+    alternates: await buildAlternates(
+      params.countryCode,
+      `/collections/${collection.handle}`
+    ),
+  }
 }
 
 export default async function CollectionPage(props: Props) {
@@ -80,11 +85,22 @@ export default async function CollectionPage(props: Props) {
   }
 
   return (
-    <CollectionTemplate
-      collection={collection}
-      page={page}
-      sortBy={sortBy}
-      countryCode={params.countryCode}
-    />
+    <>
+      <JsonLd
+        data={getBreadcrumbJsonLd(params.countryCode, [
+          { name: "Store", path: "/store" },
+          {
+            name: collection.title,
+            path: `/collections/${collection.handle}`,
+          },
+        ])}
+      />
+      <CollectionTemplate
+        collection={collection}
+        page={page}
+        sortBy={sortBy}
+        countryCode={params.countryCode}
+      />
+    </>
   )
 }

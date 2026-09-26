@@ -7,13 +7,22 @@ import { SortOptions } from "@modules/store/components/sort"
 import Hero from "@modules/home/components/hero"
 import BentoGrid from "@modules/home/components/bento-grid"
 import Philosophy from "@modules/home/components/philosophy"
+import JsonLd from "@modules/common/components/json-ld"
+import { buildAlternates, DEFAULT_DESCRIPTION, SITE_NAME } from "@lib/util/seo"
+import { getSiteJsonLd } from "@lib/util/structured-data"
 
-export const metadata: Metadata = {
-  title: {
-    absolute: "Aceline Store | Premium Second-Hand Tennis Gear",
-  },
-  description:
-    "Shop authenticated, second-hand tennis gear from Nike, Wilson, Asics and more — inspected, sustainable, and priced for players.",
+export async function generateMetadata(props: {
+  params: Promise<{ countryCode: string }>
+}): Promise<Metadata> {
+  const { countryCode } = await props.params
+
+  return {
+    title: {
+      absolute: `${SITE_NAME} | Premium Second-Hand Tennis Gear`,
+    },
+    description: DEFAULT_DESCRIPTION,
+    alternates: await buildAlternates(countryCode),
+  }
 }
 
 export default async function Home(props: {
@@ -34,6 +43,7 @@ export default async function Home(props: {
 
   return (
     <>
+      <JsonLd data={getSiteJsonLd(countryCode)} />
       <Hero />
 
       <div className="content-container py-12">

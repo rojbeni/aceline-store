@@ -96,9 +96,15 @@ const Hero = () => {
                     {slide.eyebrow}
                   </span>
                 )}
-                <h1 className="font-sans text-4xl md:text-6xl font-bold max-w-4xl mx-auto mb-8 text-primary-container leading-tight drop-shadow-[0_0_15px_rgba(195,244,0,0.2)]">
-                  {slide.headline}
-                </h1>
+                {/* One <h1> per page — later slides use <h2>. */}
+                {(() => {
+                  const HeadlineTag = index === 0 ? "h1" : "h2"
+                  return (
+                    <HeadlineTag className="font-sans text-4xl md:text-6xl font-bold max-w-4xl mx-auto mb-8 text-primary-container leading-tight drop-shadow-[0_0_15px_rgba(195,244,0,0.2)]">
+                      {slide.headline}
+                    </HeadlineTag>
+                  )
+                })()}
 
                 <p className="text-base md:text-lg text-ui-fg-subtle max-w-2xl mx-auto mb-12 leading-relaxed">
                   {slide.description}

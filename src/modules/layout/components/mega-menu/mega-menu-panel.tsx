@@ -55,7 +55,11 @@ const MegaMenuPanel = ({ category, onNavigate }: MegaMenuPanelProps) => {
           data-testid="mega-menu-featured-product"
           onClick={onNavigate}
         >
-          <Thumbnail thumbnail={featuredProduct.thumbnail} size="square" />
+          <Thumbnail
+            thumbnail={featuredProduct.thumbnail}
+            alt={featuredProduct.title}
+            size="square"
+          />
           <span className="mt-2 block truncate text-small-regular text-surface-on">
             {featuredProduct.title}
           </span>

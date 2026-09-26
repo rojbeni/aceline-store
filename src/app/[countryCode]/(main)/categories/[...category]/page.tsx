@@ -3,8 +3,11 @@ import { notFound } from "next/navigation"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
 import { listRegions } from "@lib/data/regions"
+import { buildAlternates } from "@lib/util/seo"
+import { getBreadcrumbJsonLd } from "@lib/util/structured-data"
 import { HttpTypes, StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
+import JsonLd from "@modules/common/components/json-ld"
 import { SortOptions } from "@modules/store/components/sort"
 
 type Props = {
@@ -46,15 +49,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
   try {
     const productCategory = await getCategoryByHandle(params.category)
-    const title = productCategory.name + " | Aceline Store"
-    const description = productCategory.description ?? `${title} category.`
+    const title = productCategory.name
+    const description =
+      productCategory.description ||
+      `Shop second-hand ${title} at Aceline Store — authenticated, inspected and priced for players.`
 
     return {
-      title: `${title} | Aceline Store`,
+      title,
       description,
-      alternates: {
-        canonical: `${params.category.join("/")}`,
-      },
+      alternates: await buildAlternates(
+        params.countryCode,
+        `/categories/${params.category.join("/")}`
+      ),
     }
   } catch {
     notFound()
@@ -72,12 +78,27 @@ export default async function CategoryPage(props: Props) {
     notFound()
   }
 
+  const parent = productCategory.parent_category
+
   return (
-    <CategoryTemplate
-      category={productCategory}
-      sortBy={sortBy}
-      page={page}
-      countryCode={params.countryCode}
-    />
+    <>
+      <JsonLd
+        data={getBreadcrumbJsonLd(params.countryCode, [
+          parent
+            ? { name: parent.name, path: `/categories/${parent.handle}` }
+            : { name: "Store", path: "/store" },
+          {
+            name: productCategory.name,
+            path: `/categories/${params.category.join("/")}`,
+          },
+        ])}
+      />
+      <CategoryTemplate
+        category={productCategory}
+        sortBy={sortBy}
+        page={page}
+        countryCode={params.countryCode}
+      />
+    </>
   )
 }
