@@ -3,6 +3,7 @@ import { Metadata } from "next"
 
 import { listRegions } from "@lib/data/regions"
 import { getProductPrice } from "@lib/util/get-product-price"
+import { getOptionValues, getProductBrand } from "@lib/util/product-options"
 
 export const SITE_NAME = "Aceline Store"
 
@@ -58,16 +59,6 @@ export const buildAlternates = async (
 }
 
 const META_DESCRIPTION_MAX = 155
-
-const getOptionValues = (product: HttpTypes.StoreProduct, title: string) =>
-  product.options
-    ?.find((o) => o.title?.toLowerCase() === title)
-    ?.values?.map((v) => v.value)
-    .filter(Boolean) ?? []
-
-/** Brand from the product's "Brand" option, falling back to its collection. */
-export const getProductBrand = (product: HttpTypes.StoreProduct) =>
-  getOptionValues(product, "brand")[0] || product.collection?.title || undefined
 
 /** "38.5–44" for numeric sizes, otherwise the first few values ("S, M, L"). */
 const formatSizes = (sizes: string[]) => {

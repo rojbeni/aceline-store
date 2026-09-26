@@ -2,11 +2,8 @@ import { HttpTypes } from "@medusajs/types"
 
 import { getBaseURL } from "@lib/util/env"
 import { getProductPrice } from "@lib/util/get-product-price"
-import {
-  getProductBrand,
-  getProductMetaDescription,
-  SITE_NAME,
-} from "@lib/util/seo"
+import { getProductBrand } from "@lib/util/product-options"
+import { getProductMetaDescription, SITE_NAME } from "@lib/util/seo"
 
 type Crumb = { name: string; path: string }
 

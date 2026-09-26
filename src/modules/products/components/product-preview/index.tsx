@@ -1,5 +1,6 @@
 import { Text } from "@modules/common/components/ui"
 import { getProductPrice } from "@lib/util/get-product-price"
+import { getProductBrand } from "@lib/util/product-options"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
@@ -21,7 +22,7 @@ export default function ProductPreview({
       ? Math.round(Number(cheapestPrice.percentage_diff))
       : null
 
-  const brand = product.collection?.title
+  const brand = getProductBrand(product)
 
   const sizeOption = product.options?.find(
     (option) => option.title.toLowerCase() === "size"
