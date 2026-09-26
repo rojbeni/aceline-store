@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
-import { buildAlternates } from "@lib/util/seo"
+import { buildAlternates, getProductMetaDescription } from "@lib/util/seo"
 import {
   getBreadcrumbJsonLd,
   getProductJsonLd,
@@ -92,9 +92,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound()
   }
 
-  const description =
-    product.description?.slice(0, 155).trim() ||
-    `${product.title} — shop it now at Aceline Store.`
+  const description = getProductMetaDescription(product)
   const canonical = `/${params.countryCode}/products/${product.handle}`
 
   return {
