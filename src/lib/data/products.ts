@@ -193,6 +193,28 @@ export const listProductsWithSort = async ({
 }
 
 /**
+ * Only what the grid, its filters and sorting read: card (title, handle,
+ * thumbnail, brand), size/option filters, and per-variant prices. The grid
+ * data is serialized into the page for hydration, so every extra field here
+ * ships in the store/category HTML — full products made /store ~650 KB.
+ */
+const PRODUCT_GRID_FIELDS = [
+  "id",
+  "title",
+  "handle",
+  "thumbnail",
+  "created_at",
+  "collection.title",
+  "options.id",
+  "options.title",
+  "options.values.value",
+  "variants.id",
+  "variants.options.option_id",
+  "variants.options.value",
+  "*variants.calculated_price",
+].join(",")
+
+/**
  * Products + region for a product grid page. Shared by the store/category
  * routes (server-rendered first page) and `PaginatedProducts` (client refetch
  * when category/sort/page change), so both issue the same query.
@@ -216,6 +238,7 @@ export const listProductGrid = async ({
       page,
       queryParams: {
         limit: 100,
+        fields: PRODUCT_GRID_FIELDS,
         ...(categoryId && { category_id: [categoryId] }),
       },
       sortBy,

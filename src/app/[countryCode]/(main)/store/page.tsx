@@ -25,7 +25,9 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 export default async function StorePage(props: Params) {
   const params = await props.params
   const [categories, initialData] = await Promise.all([
-    listCategories(),
+    // Only the category filter chips need these; the default fields include
+    // every product, which would be serialized into the page.
+    listCategories({ fields: "id,name" }),
     listProductGrid({ countryCode: params.countryCode }),
   ])
 

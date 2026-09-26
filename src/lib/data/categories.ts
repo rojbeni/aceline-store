@@ -38,7 +38,9 @@ export const getCategoryByHandle = async (categoryHandle: string[]) => {
       `/store/product-categories`,
       {
         query: {
-          fields: "*category_children, *products, *parent_category",
+          // No `*products`: the category page lists products via
+          // listProductGrid, and this object is serialized into the page.
+          fields: "*category_children, *parent_category",
           handle,
         },
         next,
