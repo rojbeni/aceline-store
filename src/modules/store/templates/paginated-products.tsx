@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, useMemo, useState, useTransition } from "react"
+import { useEffect, useMemo, useRef, useState, useTransition } from "react"
 import { HttpTypes } from "@medusajs/types"
 
-import { listProductsWithSort } from "@lib/data/products"
-import { getRegion } from "@lib/data/regions"
+import { listProductGrid } from "@lib/data/products"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { clx, Text } from "@modules/common/components/ui"
 import ProductPreview from "@modules/products/components/product-preview"
@@ -13,11 +12,18 @@ import { OptionFilterGroup, ProductFilter } from "@modules/store/components/filt
 import { PriceBounds } from "@modules/store/components/filter/price-filter"
 import { SortOptions } from "@modules/store/components/sort"
 
+export type ProductGridData = {
+  products: HttpTypes.StoreProduct[]
+  region: HttpTypes.StoreRegion | null
+}
+
 type PaginatedProductsProps = {
   sortBy?: SortOptions
   page: number
   countryCode: string
   filter?: ProductFilter
+  /** Server-fetched first page — rendered into the initial HTML so crawlers see the grid. */
+  initialData?: ProductGridData
   onOptionGroupsChange?: (groups: OptionFilterGroup[]) => void
   onPriceBoundsChange?: (bounds: PriceBounds | undefined) => void
 }
@@ -27,34 +33,42 @@ export default function PaginatedProducts({
   page,
   countryCode,
   filter,
+  initialData,
   onOptionGroupsChange,
   onPriceBoundsChange,
 }: PaginatedProductsProps) {
-  const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
-  const [region, setRegion] = useState<HttpTypes.StoreRegion>()
+  const [products, setProducts] = useState<HttpTypes.StoreProduct[]>(
+    initialData?.products ?? []
+  )
+  const [region, setRegion] = useState<HttpTypes.StoreRegion | undefined>(
+    initialData?.region ?? undefined
+  )
   const [isPending, startTransition] = useTransition()
 
   const categoryId = filter?.categoryId
   const selectedOptions = filter?.options
   const priceRange = filter?.priceRange
 
-  useEffect(() => {
-    startTransition(async () => {
-      const [{ response }, fetchedRegion] = await Promise.all([
-        listProductsWithSort({
-          page,
-          queryParams: {
-            limit: 100,
-            ...(categoryId && { category_id: [categoryId] }),
-          },
-          sortBy,
-          countryCode,
-        }),
-        getRegion(countryCode),
-      ])
+  // The server already fetched the initial query — only refetch once
+  // category/sort/page/country actually change.
+  const skipInitialFetch = useRef(!!initialData)
 
-      setProducts(response.products)
-      setRegion(fetchedRegion ?? undefined)
+  useEffect(() => {
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false
+      return
+    }
+
+    startTransition(async () => {
+      const data = await listProductGrid({
+        page,
+        sortBy,
+        countryCode,
+        categoryId,
+      })
+
+      setProducts(data.products)
+      setRegion(data.region ?? undefined)
     })
   }, [categoryId, sortBy, page, countryCode])
 

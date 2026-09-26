@@ -7,7 +7,9 @@ import InteractiveLink from "@modules/common/components/interactive-link"
 import Filter, { OptionFilterGroup } from "@modules/store/components/filter"
 import { PriceBounds, PriceRange } from "@modules/store/components/filter/price-filter"
 import ProductSort, { SortOptions } from "@modules/store/components/sort"
-import PaginatedProducts from "@modules/store/templates/paginated-products"
+import PaginatedProducts, {
+  ProductGridData,
+} from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 
@@ -16,11 +18,13 @@ export default function CategoryTemplate({
   sortBy,
   page,
   countryCode,
+  initialData,
 }: {
   category: HttpTypes.StoreProductCategory
   sortBy?: SortOptions
   page?: string
   countryCode: string
+  initialData?: ProductGridData
 }) {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
@@ -123,6 +127,7 @@ export default function CategoryTemplate({
             page={pageNumber}
             countryCode={countryCode}
             filter={filter}
+            initialData={initialData}
             onOptionGroupsChange={setOptionGroups}
             onPriceBoundsChange={setPriceBounds}
           />

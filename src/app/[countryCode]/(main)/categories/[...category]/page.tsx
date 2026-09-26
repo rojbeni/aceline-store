@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
+import { listProductGrid } from "@lib/data/products"
 import { listRegions } from "@lib/data/regions"
 import { buildAlternates } from "@lib/util/seo"
 import { getBreadcrumbJsonLd } from "@lib/util/structured-data"
@@ -80,6 +81,13 @@ export default async function CategoryPage(props: Props) {
 
   const parent = productCategory.parent_category
 
+  const initialData = await listProductGrid({
+    page: page ? parseInt(page) : 1,
+    sortBy: sortBy || "created_at",
+    countryCode: params.countryCode,
+    categoryId: productCategory.id,
+  })
+
   return (
     <>
       <JsonLd
@@ -98,6 +106,7 @@ export default async function CategoryPage(props: Props) {
         sortBy={sortBy}
         page={page}
         countryCode={params.countryCode}
+        initialData={initialData}
       />
     </>
   )

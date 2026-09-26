@@ -142,14 +142,7 @@ export default async function ProductPage(props: Props) {
         data={[
           getProductJsonLd(pricedProduct, params.countryCode),
           getBreadcrumbJsonLd(params.countryCode, [
-            ...(pricedProduct.collection
-              ? [
-                  {
-                    name: pricedProduct.collection.title,
-                    path: `/collections/${pricedProduct.collection.handle}`,
-                  },
-                ]
-              : [{ name: "Store", path: "/store" }]),
+            { name: "Store", path: "/store" },
             {
               name: pricedProduct.title,
               path: `/products/${pricedProduct.handle}`,

@@ -6,14 +6,16 @@ import { HttpTypes } from "@medusajs/types"
 import Filter, { OptionFilterGroup } from "@modules/store/components/filter"
 import { PriceBounds, PriceRange } from "@modules/store/components/filter/price-filter"
 
-import PaginatedProducts from "./paginated-products"
+import PaginatedProducts, { ProductGridData } from "./paginated-products"
 
 const StoreTemplate = ({
   countryCode,
   categories,
+  initialData,
 }: {
   countryCode: string
   categories?: HttpTypes.StoreProductCategory[]
+  initialData?: ProductGridData
 }) => {
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
@@ -70,6 +72,7 @@ const StoreTemplate = ({
           page={1}
           countryCode={countryCode}
           filter={filter}
+          initialData={initialData}
           onOptionGroupsChange={setOptionGroups}
           onPriceBoundsChange={setPriceBounds}
         />

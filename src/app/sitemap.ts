@@ -1,7 +1,6 @@
 import { MetadataRoute } from "next"
 
 import { listCategories } from "@lib/data/categories"
-import { listCollections } from "@lib/data/collections"
 import { listProducts } from "@lib/data/products"
 import { getBaseURL } from "@lib/util/env"
 import { listCountryCodes, toHreflang } from "@lib/util/seo"
@@ -42,12 +41,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const countryCodes = await listCountryCodes()
 
   // Handles are region-independent, so one fetch per resource type is enough.
-  const [products, categories, { collections }] = await Promise.all([
+  const [products, categories] = await Promise.all([
     listAllProducts(countryCodes[0]),
     listCategories({ fields: "handle,updated_at" }).catch(() => []),
-    listCollections({ fields: "handle,updated_at" }).catch(() => ({
-      collections: [],
-    })),
   ])
 
   const entries: Entry[] = [
@@ -65,14 +61,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((c) => c.handle)
       .map((c) => ({
         path: `/categories/${c.handle}`,
-        lastModified: c.updated_at,
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      })),
-    ...(collections ?? [])
-      .filter((c) => c.handle)
-      .map((c) => ({
-        path: `/collections/${c.handle}`,
         lastModified: c.updated_at,
         changeFrequency: "weekly" as const,
         priority: 0.7,

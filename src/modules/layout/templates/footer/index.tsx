@@ -1,5 +1,4 @@
 import { listCategories } from "@lib/data/categories";
-import { listCollections } from "@lib/data/collections";
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
@@ -9,9 +8,6 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { SiFacebook } from "@icons-pack/react-simple-icons";
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  });
   const productCategories = await listCategories();
   const [regions, locales, currentLocale] = await Promise.all([
     listRegions(),

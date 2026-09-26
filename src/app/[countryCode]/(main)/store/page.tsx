@@ -2,6 +2,7 @@ import { Metadata } from "next"
 
 import StoreTemplate from "@modules/store/templates"
 import { listCategories } from "@lib/data/categories"
+import { listProductGrid } from "@lib/data/products"
 import { buildAlternates } from "@lib/util/seo"
 
 type Params = {
@@ -23,9 +24,16 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 
 export default async function StorePage(props: Params) {
   const params = await props.params
-  const categories = await listCategories()
+  const [categories, initialData] = await Promise.all([
+    listCategories(),
+    listProductGrid({ countryCode: params.countryCode }),
+  ])
 
   return (
-    <StoreTemplate countryCode={params.countryCode} categories={categories} />
+    <StoreTemplate
+      countryCode={params.countryCode}
+      categories={categories}
+      initialData={initialData}
+    />
   )
 }

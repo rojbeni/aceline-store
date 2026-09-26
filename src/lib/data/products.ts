@@ -191,3 +191,38 @@ export const listProductsWithSort = async ({
     queryParams,
   }
 }
+
+/**
+ * Products + region for a product grid page. Shared by the store/category
+ * routes (server-rendered first page) and `PaginatedProducts` (client refetch
+ * when category/sort/page change), so both issue the same query.
+ */
+export const listProductGrid = async ({
+  page = 1,
+  sortBy,
+  countryCode,
+  categoryId,
+}: {
+  page?: number
+  sortBy?: SortOptions
+  countryCode: string
+  categoryId?: string
+}): Promise<{
+  products: HttpTypes.StoreProduct[]
+  region: HttpTypes.StoreRegion | null
+}> => {
+  const [{ response }, region] = await Promise.all([
+    listProductsWithSort({
+      page,
+      queryParams: {
+        limit: 100,
+        ...(categoryId && { category_id: [categoryId] }),
+      },
+      sortBy,
+      countryCode,
+    }),
+    getRegion(countryCode),
+  ])
+
+  return { products: response.products, region: region ?? null }
+}

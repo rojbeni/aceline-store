@@ -27,7 +27,7 @@ export default async function ProductRail({
   return (
     <ProductRailCarousel
       title={collection.title}
-      viewAllHref={`/collections/${collection.handle}`}
+      viewAllHref="/store"
       products={pricedProducts}
       region={region}
     />
