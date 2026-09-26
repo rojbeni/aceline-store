@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 
+import { useTranslation } from "@lib/context/translation-context"
 import Filter, { OptionFilterGroup } from "@modules/store/components/filter"
 import { PriceBounds, PriceRange } from "@modules/store/components/filter/price-filter"
 
@@ -17,6 +18,7 @@ const StoreTemplate = ({
   categories?: HttpTypes.StoreProductCategory[]
   initialData?: ProductGridData
 }) => {
+  const { t } = useTranslation()
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
   const [optionGroups, setOptionGroups] = useState<OptionFilterGroup[]>([])
@@ -55,6 +57,12 @@ const StoreTemplate = ({
 
   return (
     <div className="py-6 content-container" data-testid="category-container">
+      <h1
+        className="mb-8 text-2xl-semi text-surface-on"
+        data-testid="store-page-title"
+      >
+        {t("Shop all second-hand tennis gear")}
+      </h1>
       <div className="flex flex-col small:flex-row small:items-start gap-8">
         <Filter
           categories={categoryOptions}

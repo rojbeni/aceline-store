@@ -111,7 +111,8 @@ export const translations: Record<string, Record<string, string>> = {
     " and ": " and ",
     "Terms of Use": "Terms of Use",
     "Join": "Join",
-    "Already a member? ": "Already a member? "
+    "Already a member? ": "Already a member? ",
+    "Shop all second-hand tennis gear": "Shop all second-hand tennis gear"
   },
   fr: {
     "Cart": "Panier",
@@ -225,7 +226,8 @@ export const translations: Record<string, Record<string, string>> = {
     " and ": " et les ",
     "Terms of Use": "conditions d'utilisation",
     "Join": "S'inscrire",
-    "Already a member? ": "Déjà membre ? "
+    "Already a member? ": "Déjà membre ? ",
+    "Shop all second-hand tennis gear": "Tout le matériel de tennis d'occasion"
   }
 }
 

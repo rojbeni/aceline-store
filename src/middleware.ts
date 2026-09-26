@@ -133,7 +133,13 @@ export async function middleware(request: NextRequest) {
   const queryString = request.nextUrl.search || ""
   const redirectUrl = `${request.nextUrl.origin}/${country}${redirectPath}${queryString}`
 
-  return NextResponse.redirect(redirectUrl, 307)
+  // With a single country the target never varies, so redirect permanently
+  // (308) — search engines then consolidate "/" into "/{country}". With
+  // several countries the target depends on geo headers, and browsers cache
+  // permanent redirects, so keep it temporary.
+  const status = regionMap.size === 1 ? 308 : 307
+
+  return NextResponse.redirect(redirectUrl, status)
 }
 
 export const config = {
