@@ -3,12 +3,13 @@ import { MetadataRoute } from "next"
 import { listCategories } from "@lib/data/categories"
 import { listProducts } from "@lib/data/products"
 import { getBaseURL } from "@lib/util/env"
+import { SUPPORT_PAGES } from "@lib/util/site-pages"
 import { listCountryCodes, toHreflang } from "@lib/util/seo"
 
 type Entry = {
   path: string
   lastModified?: string | Date | null
-  changeFrequency: "daily" | "weekly"
+  changeFrequency: "daily" | "weekly" | "yearly"
   priority: number
 }
 
@@ -49,6 +50,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: Entry[] = [
     { path: "", changeFrequency: "daily", priority: 1.0 },
     { path: "/store", changeFrequency: "daily", priority: 0.9 },
+    { path: SUPPORT_PAGES.contact, changeFrequency: "yearly", priority: 0.3 },
+    {
+      path: SUPPORT_PAGES.shippingReturns,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
     ...products
       .filter((p) => p.handle)
       .map((p) => ({

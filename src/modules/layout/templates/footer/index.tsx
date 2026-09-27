@@ -1,4 +1,5 @@
 import { getLocale } from "@lib/data/locale-actions"
+import { SUPPORT_PAGES } from "@lib/util/site-pages"
 import { getTranslation } from "@lib/util/translations"
 import FooterBottomBar from "@modules/layout/components/footer-bottom-bar"
 
@@ -17,6 +18,18 @@ export default async function Footer() {
         <FooterBottomBar
           rightsLabel={t("All rights reserved.")}
           locationLabel={t("Second-hand tennis gear · Tunisia")}
+          links={[
+            {
+              href: SUPPORT_PAGES.contact,
+              label: t("Contact"),
+              "data-testid": "footer-contact-link",
+            },
+            {
+              href: SUPPORT_PAGES.shippingReturns,
+              label: t("Shipping & Returns"),
+              "data-testid": "footer-shipping-returns-link",
+            },
+          ]}
         />
       </div>
     </footer>

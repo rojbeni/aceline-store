@@ -8,6 +8,7 @@ import {
   PopoverPanel,
 } from "@headlessui/react"
 import { ChevronDown } from "lucide-react"
+import { useTranslation } from "@lib/context/translation-context"
 import { clx } from "@modules/common/components/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import MegaMenuPanel from "./mega-menu-panel"
@@ -17,6 +18,8 @@ type MegaMenuProps = {
 }
 
 const MegaMenu = ({ categories }: MegaMenuProps) => {
+  const { t } = useTranslation()
+
   return (
     <PopoverGroup className="hidden small:flex items-center h-full gap-x-1">
       {categories.map((category) => {
@@ -38,17 +41,29 @@ const MegaMenu = ({ categories }: MegaMenuProps) => {
         }
 
         return (
-          <Popover key={category.id} className="h-full">
+          <Popover key={category.id} className="flex h-full items-center">
             {({ open }) => (
               <>
-                <PopoverButton
+                {/* The name is a real link so every page's HTML carries
+                    crawlable category links; the chevron opens the panel. */}
+                <LocalizedClientLink
+                  href={`/categories/${category.handle}`}
                   className={clx(
-                    "flex h-full items-center gap-x-1 px-3 text-small-semi hover:text-ui-fg-base focus:outline-none",
+                    "flex h-full items-center pl-3 text-small-semi hover:text-ui-fg-base",
                     { "text-ui-fg-base": open }
                   )}
-                  data-testid="mega-menu-trigger"
+                  data-testid="mega-menu-link"
                 >
                   {category.name}
+                </LocalizedClientLink>
+                <PopoverButton
+                  className={clx(
+                    "flex h-full items-center pl-1 pr-3 hover:text-ui-fg-base focus:outline-none",
+                    { "text-ui-fg-base": open }
+                  )}
+                  aria-label={`${t("Show subcategories")}: ${category.name}`}
+                  data-testid="mega-menu-trigger"
+                >
                   <ChevronDown
                     size={14}
                     className={clx("transition-transform duration-200", {

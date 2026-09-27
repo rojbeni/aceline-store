@@ -3,6 +3,8 @@ import { HttpTypes } from "@medusajs/types"
 import { getBaseURL } from "@lib/util/env"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { getProductBrand } from "@lib/util/product-options"
+import { SUPPORT_PAGES } from "@lib/util/site-pages"
+import { RETURN_POLICY, SHIPPING_POLICY } from "@lib/util/store-policy"
 import {
   FACEBOOK_URL,
   getProductMetaDescription,
@@ -27,6 +29,46 @@ export const getBreadcrumbJsonLd = (countryCode: string, crumbs: Crumb[]) => ({
     })
   ),
 })
+
+const SHIPPING_DETAILS = {
+  "@type": "OfferShippingDetails",
+  shippingRate: {
+    "@type": "MonetaryAmount",
+    value: SHIPPING_POLICY.fee,
+    currency: SHIPPING_POLICY.currencyCode,
+  },
+  shippingDestination: {
+    "@type": "DefinedRegion",
+    addressCountry: SHIPPING_POLICY.countryCode,
+  },
+  deliveryTime: {
+    "@type": "ShippingDeliveryTime",
+    handlingTime: {
+      "@type": "QuantitativeValue",
+      minValue: SHIPPING_POLICY.handlingDays.min,
+      maxValue: SHIPPING_POLICY.handlingDays.max,
+      unitCode: "DAY",
+    },
+    transitTime: {
+      "@type": "QuantitativeValue",
+      minValue: SHIPPING_POLICY.transitDays.min,
+      maxValue: SHIPPING_POLICY.transitDays.max,
+      unitCode: "DAY",
+    },
+  },
+}
+
+// schema.org counts calendar days; the law grants working days, so the
+// window stated here is never longer than what the customer actually has.
+const RETURN_POLICY_JSON_LD = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: RETURN_POLICY.countryCode,
+  returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+  merchantReturnDays: RETURN_POLICY.windowWorkingDays,
+  returnMethod: "https://schema.org/ReturnByMail",
+  returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+  refundType: "https://schema.org/FullRefund",
+}
 
 const isVariantInStock = (variant: HttpTypes.StoreProductVariant) =>
   !variant.manage_inventory ||
@@ -79,6 +121,14 @@ export const getProductJsonLd = (
         availability: isVariantInStock(variant)
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
+        shippingDetails: SHIPPING_DETAILS,
+        hasMerchantReturnPolicy: {
+          ...RETURN_POLICY_JSON_LD,
+          merchantReturnLink: absoluteUrl(
+            countryCode,
+            SUPPORT_PAGES.shippingReturns
+          ),
+        },
       },
     ]
   })

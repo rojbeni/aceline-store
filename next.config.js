@@ -25,11 +25,16 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    // Optimized (resized + re-encoded per device) — serving the 1600px
+    // originals made mobile product pages ~3 MB with a 17.9 s LCP.
     remotePatterns: [
       {
         protocol: "http",
         hostname: "localhost",
+      },
+      {
+        protocol: "https",
+        hostname: "media.aceline.online",
       },
       {
         protocol: "https",

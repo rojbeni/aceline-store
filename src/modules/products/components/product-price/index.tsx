@@ -1,3 +1,4 @@
+import { useTranslation } from "@lib/context/translation-context"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 
@@ -8,6 +9,7 @@ export default function ProductPrice({
   product: HttpTypes.StoreProduct
   variant?: HttpTypes.StoreProductVariant
 }) {
+  const { t } = useTranslation()
   const { cheapestPrice, variantPrice } = getProductPrice({
     product,
     variantId: variant?.id,
@@ -23,7 +25,7 @@ export default function ProductPrice({
     <div className="flex flex-col gap-y-1 text-surface-on">
       <div className="flex items-center gap-x-2">
         <span className="text-large-semi">
-          {!variant && "From "}
+          {!variant && `${t("From")} `}
           <span
             data-testid="product-price"
             data-value={selectedPrice.calculated_price_number}

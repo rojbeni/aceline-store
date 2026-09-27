@@ -5,11 +5,11 @@ import { Star } from "lucide-react"
 import { Text } from "@modules/common/components/ui"
 import Back from "@modules/common/icons/back"
 import FastDelivery from "@modules/common/icons/fast-delivery"
-import Refresh from "@modules/common/icons/refresh"
 
 import Accordion from "@modules/common/components/accordion"
 import { HttpTypes } from "@medusajs/types"
 import { useTranslation } from "@lib/context/translation-context"
+import { RETURN_POLICY, SHIPPING_POLICY } from "@lib/util/store-policy"
 
 type ProductTabsProps = {
   product: HttpTypes.StoreProduct
@@ -99,25 +99,19 @@ const ShippingInfoTab = () => {
             className="text-primary-container flex-shrink-0"
           />
           <div>
-            <span className="font-semibold text-surface-on">{t("Fast delivery")}</span>
+            <span className="font-semibold text-surface-on">
+              {t("Delivery in {days} days").replace(
+                "{days}",
+                `${SHIPPING_POLICY.deliveryDays}`
+              )}
+            </span>
             <p className="max-w-sm">
               {t(
-                "Your package will arrive in 3-5 business days at your pick up location or in the comfort of your home."
-              )}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-start gap-x-2.5 text-surface-on-variant">
-          <Refresh
-            size={14}
-            className="text-primary-container flex-shrink-0"
-          />
-          <div>
-            <span className="font-semibold text-surface-on">{t("Simple exchanges")}</span>
-            <p className="max-w-sm">
-              {t(
-                "Is the fit not quite right? No worries - we'll exchange your product for a new one."
-              )}
+                "Delivered anywhere in Tunisia within {days} business days, for a flat fee of {fee} {currency}."
+              )
+                .replace("{days}", `${SHIPPING_POLICY.deliveryDays}`)
+                .replace("{fee}", `${SHIPPING_POLICY.fee}`)
+                .replace("{currency}", SHIPPING_POLICY.currencyCode)}
             </p>
           </div>
         </div>
@@ -127,11 +121,16 @@ const ShippingInfoTab = () => {
             className="text-primary-container flex-shrink-0"
           />
           <div>
-            <span className="font-semibold text-surface-on">{t("Easy returns")}</span>
+            <span className="font-semibold text-surface-on">
+              {t("Right of withdrawal")}
+            </span>
             <p className="max-w-sm">
               {t(
-                "Just return your product and we'll refund your money. No questions asked – we'll do our best to make sure your return is hassle-free."
-              )}
+                "Under Tunisian Law No. {law}, you have {days} working days from receipt to return your item. Return shipping is at your expense; we refund you within {refundDays} working days of receiving it."
+              )
+                .replace("{law}", RETURN_POLICY.lawReference)
+                .replace("{days}", `${RETURN_POLICY.windowWorkingDays}`)
+                .replace("{refundDays}", `${RETURN_POLICY.refundWorkingDays}`)}
             </p>
           </div>
         </div>
