@@ -52,10 +52,12 @@ const Item: React.FC<AccordionItemProps> = ({
         className
       )}
     >
-      <AccordionPrimitive.Header className="px-1">
-        <div className="flex flex-col">
+      {/* h2: accordions sit directly under the page h1 (PDP tabs, PLP
+          filters); Radix's default h3 would skip a heading level. */}
+      <AccordionPrimitive.Header asChild>
+        <h2 className="flex flex-col px-1">
           <AccordionPrimitive.Trigger className="flex w-full items-center justify-between gap-4 py-1 cursor-pointer">
-            <Text className="text-surface-on text-small-semi text-left">
+            <Text as="span" className="text-surface-on text-small-semi text-left">
               {title}
             </Text>
             {customTrigger || <MorphingTrigger />}
@@ -65,7 +67,7 @@ const Item: React.FC<AccordionItemProps> = ({
               {subtitle}
             </Text>
           )}
-        </div>
+        </h2>
       </AccordionPrimitive.Header>
       <AccordionPrimitive.Content
         forceMount={forceMountContent}

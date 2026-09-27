@@ -167,7 +167,7 @@ const Hero = () => {
                     ? "w-6 bg-primary-container"
                     : "w-1.5 bg-white/40 hover:bg-white/70"
                 )}
-                aria-label={`Go to slide ${index + 1}`}
+                aria-label={t("Go to slide {n}").replace("{n}", `${index + 1}`)}
                 aria-current={selectedIndex === index}
               />
             ))}

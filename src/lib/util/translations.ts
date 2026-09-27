@@ -179,7 +179,20 @@ export const translations: Record<string, Record<string, string>> = {
     "Send the item back to us; return shipping is at your expense.": "Send the item back to us; return shipping is at your expense.",
     "We refund you within {days} working days of receiving the return.": "We refund you within {days} working days of receiving the return.",
     "A question about a delivery or a return?": "A question about a delivery or a return?",
-    "Go to image {n}": "Go to image {n}"
+    "Go to image {n}": "Go to image {n}",
+    "Open full-size image viewer": "Open full-size image viewer",
+    "Previous image": "Previous image",
+    "Next image": "Next image",
+    "Product image viewer": "Product image viewer",
+    "Close image viewer": "Close image viewer",
+    "Previous products": "Previous products",
+    "Next products": "Next products",
+    "Go to slide {n}": "Go to slide {n}",
+    "Open cart": "Open cart",
+    "Open menu": "Open menu",
+    "Close menu": "Close menu",
+    "Switch to light mode": "Switch to light mode",
+    "Switch to dark mode": "Switch to dark mode"
   },
   fr: {
     "Cart": "Panier",
@@ -361,7 +374,20 @@ export const translations: Record<string, Record<string, string>> = {
     "Send the item back to us; return shipping is at your expense.": "Renvoyez-nous l'article ; les frais de retour sont à votre charge.",
     "We refund you within {days} working days of receiving the return.": "Nous vous remboursons sous {days} jours ouvrables après réception du retour.",
     "A question about a delivery or a return?": "Une question sur une livraison ou un retour ?",
-    "Go to image {n}": "Aller à l'image {n}"
+    "Go to image {n}": "Aller à l'image {n}",
+    "Open full-size image viewer": "Ouvrir l'image en plein écran",
+    "Previous image": "Image précédente",
+    "Next image": "Image suivante",
+    "Product image viewer": "Visionneuse d'images du produit",
+    "Close image viewer": "Fermer la visionneuse",
+    "Previous products": "Produits précédents",
+    "Next products": "Produits suivants",
+    "Go to slide {n}": "Aller à la diapositive {n}",
+    "Open cart": "Ouvrir le panier",
+    "Open menu": "Ouvrir le menu",
+    "Close menu": "Fermer le menu",
+    "Switch to light mode": "Passer en mode clair",
+    "Switch to dark mode": "Passer en mode sombre"
   }
 }
 

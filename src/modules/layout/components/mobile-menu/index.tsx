@@ -7,12 +7,14 @@ import { HttpTypes } from "@medusajs/types"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import MobileCategoryItem from "./mobile-category-item"
+import { useTranslation } from "@lib/context/translation-context"
 
 type MobileMenuProps = {
   categories?: HttpTypes.StoreProductCategory[]
 }
 
 const MobileMenu = ({ categories = [] }: MobileMenuProps) => {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 
@@ -22,7 +24,7 @@ const MobileMenu = ({ categories = [] }: MobileMenuProps) => {
         type="button"
         className="small:hidden flex items-center justify-center h-8 w-8 text-ui-fg-base dark:text-surface-on"
         onClick={() => setOpen(true)}
-        aria-label="Open menu"
+        aria-label={t("Open menu")}
         data-testid="mobile-menu-toggle"
       >
         <Menu size={22} />
@@ -59,7 +61,7 @@ const MobileMenu = ({ categories = [] }: MobileMenuProps) => {
                     <button
                       type="button"
                       onClick={close}
-                      aria-label="Close menu"
+                      aria-label={t("Close menu")}
                       data-testid="mobile-menu-close"
                     >
                       <X size={20} className="text-ui-fg-base dark:text-surface-on" />

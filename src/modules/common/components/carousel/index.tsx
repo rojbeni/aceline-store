@@ -5,6 +5,7 @@ import useEmblaCarousel from "embla-carousel-react"
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react"
 import Image from "next/image"
 
+import { useTranslation } from "@lib/context/translation-context"
 import { clx } from "@modules/common/components/ui"
 
 interface CarouselProps {
@@ -20,6 +21,7 @@ export default function Carousel({
   autoSlide = false,
   autoSlideInterval = 3000,
 }: CarouselProps) {
+  const { t } = useTranslation()
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
@@ -108,7 +110,7 @@ export default function Carousel({
                   ref={index === 0 ? triggerRef : undefined}
                   onClick={() => setLightboxOpen(true)}
                   className="absolute inset-0 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-container"
-                  aria-label="Open full-size image viewer"
+                  aria-label={t("Open full-size image viewer")}
                 >
                   <Image
                     src={img}
@@ -136,14 +138,14 @@ export default function Carousel({
             <button
               onClick={scrollPrev}
               className="pointer-events-auto rounded-full border border-white/10 bg-black/30 p-2.5 text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-black/50 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container small:opacity-0 small:group-hover:opacity-100"
-              aria-label="Previous image"
+              aria-label={t("Previous image")}
             >
               <ChevronLeft size={20} />
             </button>
             <button
               onClick={scrollNext}
               className="pointer-events-auto rounded-full border border-white/10 bg-black/30 p-2.5 text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-black/50 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container small:opacity-0 small:group-hover:opacity-100"
-              aria-label="Next image"
+              aria-label={t("Next image")}
             >
               <ChevronRight size={20} />
             </button>
@@ -152,19 +154,24 @@ export default function Carousel({
 
         {/* Indicator Dots (mobile only) */}
         {images.length > 1 && (
-          <div className="absolute inset-x-0 bottom-4 flex items-center justify-center gap-1.5 small:hidden">
+          <div className="absolute inset-x-0 bottom-4 flex items-center justify-center gap-0 small:hidden">
             {scrollSnaps.map((_, i) => (
               <button
                 key={i}
                 onClick={() => scrollTo(i)}
-                className={clx(
-                  "h-1.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
-                  selectedIndex === i
-                    ? "w-6 bg-white"
-                    : "w-1.5 bg-white/50 hover:bg-white/80"
-                )}
-                aria-label={`Go to image ${i + 1}`}
-              />
+                // 24px tap target (Lighthouse target-size) around the 6px dot.
+                className="group/dot flex h-6 min-w-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                aria-label={t("Go to image {n}").replace("{n}", `${i + 1}`)}
+              >
+                <span
+                  className={clx(
+                    "block h-1.5 rounded-full transition-all duration-300",
+                    selectedIndex === i
+                      ? "w-6 bg-white"
+                      : "w-1.5 bg-white/50 group-hover/dot:bg-white/80"
+                  )}
+                />
+              </button>
             ))}
           </div>
         )}
@@ -183,7 +190,7 @@ export default function Carousel({
                   ? "border-primary-container opacity-100"
                   : "border-transparent opacity-60 hover:border-outline-variant hover:opacity-100"
               )}
-              aria-label={`Go to image ${idx + 1}`}
+              aria-label={t("Go to image {n}").replace("{n}", `${idx + 1}`)}
               aria-current={selectedIndex === idx}
             >
               <Image
@@ -205,7 +212,7 @@ export default function Carousel({
           className="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
-          aria-label="Product image viewer"
+          aria-label={t("Product image viewer")}
           onClick={() => setLightboxOpen(false)}
         >
           <button
@@ -213,7 +220,7 @@ export default function Carousel({
             ref={closeRef}
             onClick={() => setLightboxOpen(false)}
             className="absolute right-4 top-4 z-10 rounded-full border border-white/20 bg-black/40 p-2.5 text-white transition-colors hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
-            aria-label="Close image viewer"
+            aria-label={t("Close image viewer")}
           >
             <X size={20} />
           </button>
@@ -238,14 +245,14 @@ export default function Carousel({
                 <button
                   onClick={scrollPrev}
                   className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-black/30 p-3 text-white backdrop-blur-md transition-all hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
-                  aria-label="Previous image"
+                  aria-label={t("Previous image")}
                 >
                   <ChevronLeft size={22} />
                 </button>
                 <button
                   onClick={scrollNext}
                   className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-black/30 p-3 text-white backdrop-blur-md transition-all hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
-                  aria-label="Next image"
+                  aria-label={t("Next image")}
                 >
                   <ChevronRight size={22} />
                 </button>
@@ -262,14 +269,19 @@ export default function Carousel({
                 <button
                   key={i}
                   onClick={() => scrollTo(i)}
-                  className={clx(
-                    "h-1.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
-                    selectedIndex === i
-                      ? "w-6 bg-primary-container"
-                      : "w-1.5 bg-white/40 hover:bg-white/70"
-                  )}
-                  aria-label={`Go to image ${i + 1}`}
-                />
+                  // 24px tap target (Lighthouse target-size) around the 6px dot.
+                  className="group/dot flex h-6 min-w-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  aria-label={t("Go to image {n}").replace("{n}", `${i + 1}`)}
+                >
+                  <span
+                    className={clx(
+                      "block h-1.5 rounded-full transition-all duration-300",
+                      selectedIndex === i
+                        ? "w-6 bg-primary-container"
+                        : "w-1.5 bg-white/40 group-hover/dot:bg-white/70"
+                    )}
+                  />
+                </button>
               ))}
             </div>
           )}

@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+
+import { useTranslation } from "@lib/context/translation-context"
 import { Moon, Sun } from "lucide-react"
 
 type Theme = "light" | "dark"
@@ -17,6 +19,7 @@ const applyTheme = (theme: Theme) => {
 }
 
 const ThemeToggle = ({ className = "" }: { className?: string }) => {
+  const { t } = useTranslation()
   const [theme, setTheme] = useState<Theme | null>(null)
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const ThemeToggle = ({ className = "" }: { className?: string }) => {
     <button
       type="button"
       onClick={toggle}
-      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={t(theme === "dark" ? "Switch to light mode" : "Switch to dark mode")}
       data-testid="theme-toggle"
       className={`flex items-center justify-center h-8 w-8 rounded-full text-surface-on-variant hover:text-surface-on hover:bg-surface-container-high transition-colors ${className}`}
     >

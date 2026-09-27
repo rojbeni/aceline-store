@@ -1,6 +1,7 @@
 "use client"
 
 import { ShoppingCart } from "lucide-react"
+import { useTranslation } from "@lib/context/translation-context"
 
 type CartTriggerButtonProps = {
   itemCount: number
@@ -8,12 +9,13 @@ type CartTriggerButtonProps = {
 }
 
 const CartTriggerButton = ({ itemCount, onClick }: CartTriggerButtonProps) => {
+  const { t } = useTranslation()
   return (
     <button
       onClick={onClick}
       className="h-full relative hover:text-ui-fg-base"
       data-testid="nav-cart-link"
-      aria-label="Open cart"
+      aria-label={t("Open cart")}
     >
       <div className="relative">
         <ShoppingCart size={20} />
