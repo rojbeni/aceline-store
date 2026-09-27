@@ -8,14 +8,24 @@ import { getAuthHeaders, getCacheTag, getCartId } from "./cookies"
 const LOCALE_COOKIE_NAME = "_medusa_locale"
 
 /**
- * Gets the current locale from cookies
+ * Locale for visitors with no preference yet — including crawlers, which never
+ * carry the cookie, so this is the language search engines index. Content is
+ * written for the Tunisian market in French.
+ */
+const DEFAULT_LOCALE = "fr-FR"
+
+/**
+ * Gets the current locale from cookies, falling back to DEFAULT_LOCALE.
+ * An empty cookie value is an explicit choice of the base (English) content
+ * — the language switcher's "English" option — so only a missing cookie
+ * falls back.
  */
 export const getLocale = async (): Promise<string | null> => {
   try {
     const cookies = await nextCookies()
-    return cookies.get(LOCALE_COOKIE_NAME)?.value ?? null
+    return cookies.get(LOCALE_COOKIE_NAME)?.value ?? DEFAULT_LOCALE
   } catch {
-    return null
+    return DEFAULT_LOCALE
   }
 }
 

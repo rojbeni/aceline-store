@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Text } from "@modules/common/components/ui"
+import { useTranslation } from "@lib/context/translation-context"
 
 export type PriceBounds = {
   min: number
@@ -27,6 +28,7 @@ const PriceFilter = ({
   onChange,
   "data-testid": dataTestId,
 }: PriceFilterProps) => {
+  const { t } = useTranslation()
   const [minInput, setMinInput] = useState(value.min?.toString() ?? "")
   const [maxInput, setMaxInput] = useState(value.max?.toString() ?? "")
 
@@ -56,7 +58,7 @@ const PriceFilter = ({
           onBlur={commit}
           onKeyDown={(e) => e.key === "Enter" && commit()}
           className="w-full min-w-0 rounded-base border border-outline-variant bg-surface-container-lowest px-2 py-1.5 text-small-regular text-surface-on focus:border-primary-container focus:outline-none"
-          aria-label="Minimum price"
+          aria-label={t("Minimum price")}
         />
         <span className="text-surface-on-variant">–</span>
         <input
@@ -70,7 +72,7 @@ const PriceFilter = ({
           onBlur={commit}
           onKeyDown={(e) => e.key === "Enter" && commit()}
           className="w-full min-w-0 rounded-base border border-outline-variant bg-surface-container-lowest px-2 py-1.5 text-small-regular text-surface-on focus:border-primary-container focus:outline-none"
-          aria-label="Maximum price"
+          aria-label={t("Maximum price")}
         />
       </div>
     </div>

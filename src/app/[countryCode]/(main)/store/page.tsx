@@ -15,9 +15,9 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
   const { countryCode } = await props.params
 
   return {
-    title: "Shop All Second-Hand Tennis Gear",
+    title: "Tout le matériel de tennis d'occasion",
     description:
-      "Browse every authenticated, second-hand racket, shoe and apparel piece at Aceline Store — inspected, sustainable, and priced for players.",
+      "Parcourez toutes nos chaussures, sacs et vêtements de tennis d'occasion : authentifiés, inspectés et à petit prix sur Aceline Store, en Tunisie.",
     alternates: await buildAlternates(countryCode, "/store"),
   }
 }

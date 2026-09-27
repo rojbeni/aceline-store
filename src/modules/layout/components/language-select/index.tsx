@@ -62,10 +62,13 @@ const getLocalizedLanguageName = (
   }
 }
 
+// An empty locale code means Medusa's base content, which is English. It is
+// no longer the default (visitors without a choice get fr-FR, see getLocale),
+// so it is labelled as the language it actually serves.
 const DEFAULT_OPTION: LanguageOption = {
   code: "",
-  name: "Default",
-  localizedName: "Default",
+  name: "English",
+  localizedName: "English",
   countryCode: "",
 }
 
@@ -88,13 +91,20 @@ const LanguageSelect = ({
       localizedName: getLocalizedLanguageName(
         locale.code,
         locale.name,
-        currentLocale ?? "en-US"
+        currentLocale || "en-US"
       ),
       countryCode: getCountryCodeFromLocale(locale.code),
     }))
-    const defaultOpt = { ...DEFAULT_OPTION, localizedName: t("Default"), }
+    const defaultOpt = {
+      ...DEFAULT_OPTION,
+      localizedName: getLocalizedLanguageName(
+        "en",
+        DEFAULT_OPTION.name,
+        currentLocale || "en-US"
+      ),
+    }
     return [defaultOpt, ...localeOptions]
-  }, [locales, currentLocale, t])
+  }, [locales, currentLocale])
 
   useEffect(() => {
     if (currentLocale) {

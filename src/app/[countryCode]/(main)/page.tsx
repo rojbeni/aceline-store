@@ -18,7 +18,7 @@ export async function generateMetadata(props: {
 
   return {
     title: {
-      absolute: `${SITE_NAME} | Premium Second-Hand Tennis Gear`,
+      absolute: `${SITE_NAME} | Matériel de tennis d'occasion en Tunisie`,
     },
     description: DEFAULT_DESCRIPTION,
     alternates: await buildAlternates(countryCode),

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useTransition } from "react"
 import { HttpTypes } from "@medusajs/types"
 
+import { useTranslation } from "@lib/context/translation-context"
 import { listProductGrid } from "@lib/data/products"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { clx, Text } from "@modules/common/components/ui"
@@ -37,6 +38,7 @@ export default function PaginatedProducts({
   onOptionGroupsChange,
   onPriceBoundsChange,
 }: PaginatedProductsProps) {
+  const { t } = useTranslation()
   const [products, setProducts] = useState<HttpTypes.StoreProduct[]>(
     initialData?.products ?? []
   )
@@ -169,10 +171,10 @@ export default function PaginatedProducts({
       {filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-y-1 rounded-large border border-outline-variant bg-surface-container-low px-6 py-24 text-center">
           <Text className="text-surface-on text-base-semi">
-            No products found
+            {t("No products found")}
           </Text>
           <Text className="text-surface-on-variant text-small-regular">
-            Try adjusting or clearing your filters.
+            {t("Try adjusting or clearing your filters.")}
           </Text>
         </div>
       ) : (

@@ -2,7 +2,11 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
-import { buildAlternates, getProductMetaDescription } from "@lib/util/seo"
+import {
+  buildAlternates,
+  getProductMetaDescription,
+  getProductSeoOverrides,
+} from "@lib/util/seo"
 import {
   getBreadcrumbJsonLd,
   getProductJsonLd,
@@ -93,17 +97,21 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   const description = getProductMetaDescription(product)
+  const seo = getProductSeoOverrides(product)
   const canonical = `/${params.countryCode}/products/${product.handle}`
 
   return {
-    title: product.title,
+    // `absolute` skips the root "%s | Aceline Store" template — seo_title
+    // already ends with the brand.
+    title: seo.title ? { absolute: seo.title } : product.title,
     description,
+    keywords: seo.keywords,
     alternates: await buildAlternates(
       params.countryCode,
       `/products/${product.handle}`
     ),
     openGraph: {
-      title: product.title,
+      title: seo.title ?? product.title,
       description,
       url: canonical,
       type: "website",

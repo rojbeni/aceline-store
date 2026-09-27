@@ -53,7 +53,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     const title = productCategory.name
     const description =
       productCategory.description ||
-      `Shop second-hand ${title} at Aceline Store — authenticated, inspected and priced for players.`
+      `${title} de tennis d'occasion : authentifiés, inspectés et à petit prix sur Aceline Store, en Tunisie.`
 
     return {
       title,

@@ -1,4 +1,5 @@
 import { HttpTypes } from "@medusajs/types"
+import { useTranslation } from "@lib/context/translation-context"
 import { clx } from "@modules/common/components/ui"
 import React from "react"
 
@@ -21,12 +22,13 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   disabled,
   isValDisabled,
 }) => {
+  const { t } = useTranslation()
   const filteredOptions = (option.values ?? []).map((v) => v.value)
 
   return (
     <div className="flex flex-col gap-y-2">
       <span className="text-xsmall-regular font-semibold uppercase tracking-wider text-surface-on-variant">
-        Select {title}
+        {t("Select")} {t(title)}
       </span>
       <div
         className="flex flex-wrap gap-2"

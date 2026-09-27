@@ -9,6 +9,7 @@ export type HeroSlide = {
   accentPosition: string
 }
 
+// Text fields are English translation keys, rendered through t() in Hero.
 export const heroSlides: HeroSlide[] = [
   {
     id: "welcome",

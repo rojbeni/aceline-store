@@ -5,6 +5,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } fro
 import { ArrowUpDown, ChevronDown } from "lucide-react"
 import { clx } from "@modules/common/components/ui"
 import { Fragment } from "react"
+import { useTranslation } from "@lib/context/translation-context"
 
 export type SortOptions = "price_asc" | "price_desc" | "created_at"
 
@@ -29,6 +30,7 @@ const sortOptions = [
 ] as const
 
 const ProductSort = ({ sortBy, "data-testid": dataTestId }: SortProductsProps) => {
+  const { t } = useTranslation()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -53,7 +55,7 @@ const ProductSort = ({ sortBy, "data-testid": dataTestId }: SortProductsProps) =
           <>
             <ListboxButton className="flex items-center gap-x-2 px-4 py-2.5 text-sm font-medium text-ui-fg-subtle bg-white hover:bg-gray-50 border border-gray-200 hover:text-ui-fg-base rounded-full shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 select-none">
               <ArrowUpDown className="w-4 h-4 text-ui-fg-muted" />
-              <span>Sort by: {activeSortOption.label}</span>
+              <span>{t("Sort by:")} {t(activeSortOption.label)}</span>
               <ChevronDown className={clx("w-4 h-4 text-ui-fg-muted transition-transform duration-200", open && "rotate-180")} />
             </ListboxButton>
             <Transition
@@ -78,7 +80,7 @@ const ProductSort = ({ sortBy, "data-testid": dataTestId }: SortProductsProps) =
                     >
                       {({ selected }) => (
                         <div className="flex items-center justify-between font-sans">
-                          <span>{option.label}</span>
+                          <span>{t(option.label)}</span>
                           {selected && (
                             <span className="w-1.5 h-1.5 rounded-full bg-black" />
                           )}

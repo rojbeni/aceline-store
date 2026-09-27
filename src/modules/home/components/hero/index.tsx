@@ -6,11 +6,13 @@ import { ArrowRightMini } from "@medusajs/icons"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button, clx } from "@modules/common/components/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { useTranslation } from "@lib/context/translation-context"
 import { heroSlides } from "./hero-slides"
 
 const AUTOPLAY_INTERVAL_MS = 6000
 
 const Hero = () => {
+  const { t } = useTranslation()
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -60,7 +62,7 @@ const Hero = () => {
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
       aria-roledescription="carousel"
-      aria-label="Featured promotions"
+      aria-label={t("Featured promotions")}
     >
       {/* Faint grid overlay, shared across all slides */}
       <div
@@ -93,7 +95,7 @@ const Hero = () => {
               <div className="max-w-[1440px] mx-auto px-6 md:px-16 text-center relative z-10 w-full py-24">
                 {slide.eyebrow && (
                   <span className="inline-block mb-4 text-small-semi uppercase tracking-wider text-primary-container">
-                    {slide.eyebrow}
+                    {t(slide.eyebrow)}
                   </span>
                 )}
                 {/* One <h1> per page — later slides use <h2>. */}
@@ -101,13 +103,13 @@ const Hero = () => {
                   const HeadlineTag = index === 0 ? "h1" : "h2"
                   return (
                     <HeadlineTag className="font-sans text-4xl md:text-6xl font-bold max-w-4xl mx-auto mb-8 text-primary-container leading-tight drop-shadow-[0_0_15px_rgba(195,244,0,0.2)]">
-                      {slide.headline}
+                      {t(slide.headline)}
                     </HeadlineTag>
                   )
                 })()}
 
                 <p className="text-base md:text-lg text-ui-fg-subtle max-w-2xl mx-auto mb-12 leading-relaxed">
-                  {slide.description}
+                  {t(slide.description)}
                 </p>
 
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -116,7 +118,7 @@ const Hero = () => {
                       variant="primary"
                       className="group px-10 py-4 rounded-lg text-base hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-black/5 flex items-center gap-2 neon-glow"
                     >
-                      {slide.ctaLabel}
+                      {t(slide.ctaLabel)}
                       <ArrowRightMini className="group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </LocalizedClientLink>
@@ -139,7 +141,7 @@ const Hero = () => {
               type="button"
               onClick={scrollPrev}
               className="pointer-events-auto rounded-full border border-white/10 bg-black/30 p-2.5 text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-black/50 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
-              aria-label="Previous slide"
+              aria-label={t("Previous slide")}
             >
               <ChevronLeft size={20} />
             </button>
@@ -147,7 +149,7 @@ const Hero = () => {
               type="button"
               onClick={scrollNext}
               className="pointer-events-auto rounded-full border border-white/10 bg-black/30 p-2.5 text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-black/50 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
-              aria-label="Next slide"
+              aria-label={t("Next slide")}
             >
               <ChevronRight size={20} />
             </button>

@@ -2,6 +2,7 @@ import { listCategories } from "@lib/data/categories";
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
+import { getTranslation } from "@lib/util/translations"
 import FooterSelectors from "@modules/layout/components/footer-selectors"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
@@ -14,6 +15,7 @@ export default async function Footer() {
     listLocales(),
     getLocale(),
   ])
+  const t = (key: string) => getTranslation(currentLocale, key)
 
   return (
     <div className="sticky">
@@ -21,7 +23,7 @@ export default async function Footer() {
         <div className="content-container flex flex-col sm:flex-row justify-between items-center gap-y-4 w-full">
           <div>
             <LocalizedClientLink href="/">Aceline Store</LocalizedClientLink>
-            <p>&copy; {new Date().getFullYear()} Aceline Store. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Aceline Store. {t("All rights reserved.")}</p>
           </div>
           <div>
             <a href="https://facebook.com" target="_blank" aria-label="Facebook" className="flex justify-end" >

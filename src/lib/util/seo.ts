@@ -8,15 +8,16 @@ import { getOptionValues, getProductBrand } from "@lib/util/product-options"
 export const SITE_NAME = "Aceline Store"
 
 export const DEFAULT_DESCRIPTION =
-  "Shop authenticated, second-hand tennis gear from Nike, Wilson, Asics and more — inspected, sustainable, and priced for players."
+  "Matériel de tennis d'occasion authentifié : chaussures, sacs et vêtements Nike, Wilson, Asics et plus, inspectés et à petit prix en Tunisie."
 
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
 // Page content language is cookie-driven, not URL-driven, so crawlers always
-// get the default language — hreflang tags must advertise that language.
-const DEFAULT_LANGUAGE = "en"
+// get the default locale (see DEFAULT_LOCALE in locale-actions) — hreflang
+// tags must advertise that language.
+const DEFAULT_LANGUAGE = "fr"
 
-/** hreflang code for a country's URLs, e.g. "fr" → "en-FR". */
+/** hreflang code for a country's URLs, e.g. "tn" → "fr-TN". */
 export const toHreflang = (countryCode: string) =>
   `${DEFAULT_LANGUAGE}-${countryCode.toUpperCase()}`
 
@@ -60,25 +61,52 @@ export const buildAlternates = async (
 
 const META_DESCRIPTION_MAX = 155
 
-/** "38.5–44" for numeric sizes, otherwise the first few values ("S, M, L"). */
+/** "38,5–44" for numeric sizes, otherwise the first few values ("S, M, L"). */
 const formatSizes = (sizes: string[]) => {
   const numeric = sizes.map(Number)
   if (numeric.every((n) => !Number.isNaN(n))) {
+    // French decimal comma: 38.5 → "38,5".
+    const fr = (n: number) => `${n}`.replace(".", ",")
     const min = Math.min(...numeric)
     const max = Math.max(...numeric)
-    return min === max ? `${min}` : `${min}–${max}`
+    return min === max ? fr(min) : `${fr(min)}–${fr(max)}`
   }
   return sizes.slice(0, 4).join(", ")
 }
 
+/** A non-empty string from product metadata (admin-editable SEO fields). */
+const getMetadataString = (product: HttpTypes.StoreProduct, key: string) => {
+  const value = product.metadata?.[key]
+  return typeof value === "string" && value.trim() ? value.trim() : undefined
+}
+
 /**
- * Meta description for a product page. Uses the Medusa description when one
- * is written; otherwise builds one from brand, condition, sizes and price so
- * pages without copy still get a specific, non-duplicate snippet.
+ * SEO overrides set per product in the Medusa admin under metadata:
+ * `seo_title` (used as-is — it already carries the brand suffix),
+ * `seo_description`, and `seo_keywords` (comma-separated).
+ */
+export const getProductSeoOverrides = (product: HttpTypes.StoreProduct) => ({
+  title: getMetadataString(product, "seo_title"),
+  keywords: getMetadataString(product, "seo_keywords")
+    ?.split(",")
+    .map((k) => k.trim())
+    .filter(Boolean),
+})
+
+/**
+ * Meta description for a product page. Prefers `metadata.seo_description`,
+ * then the Medusa description when one is written; otherwise builds one from
+ * brand, condition, sizes and price so pages without copy still get a
+ * specific, non-duplicate snippet.
  */
 export const getProductMetaDescription = (
   product: HttpTypes.StoreProduct
 ) => {
+  const seoDescription = getMetadataString(product, "seo_description")
+  if (seoDescription) {
+    return seoDescription
+  }
+
   const written = product.description?.trim()
   if (written) {
     return written.length > META_DESCRIPTION_MAX
@@ -86,22 +114,25 @@ export const getProductMetaDescription = (
       : written
   }
 
+  // French: crawlers are served the fr-FR locale (see DEFAULT_LOCALE).
   const brand = getProductBrand(product)
-  const condition = product.metadata?.condition === "new" ? "New" : "Second-hand"
+  const condition = product.metadata?.condition === "new" ? "neuf" : "d'occasion"
   const sizes = getOptionValues(product, "size")
   const { cheapestPrice } = getProductPrice({ product })
 
   const parts = [
-    `${condition} ${product.title}${
+    `${product.title}${
       brand && !product.title?.toLowerCase().includes(brand.toLowerCase())
-        ? ` by ${brand}`
+        ? ` ${brand}`
         : ""
-    }`,
-    sizes.length ? `${sizes.length > 1 ? "sizes" : "size"} ${formatSizes(sizes)}` : "",
+    } ${condition}`,
+    sizes.length
+      ? `${sizes.length > 1 ? "tailles" : "taille"} ${formatSizes(sizes)}`
+      : "",
     cheapestPrice
-      ? `from ${Math.round(cheapestPrice.calculated_price_number)} ${cheapestPrice.currency_code.toUpperCase()}`
+      ? `à partir de ${Math.round(cheapestPrice.calculated_price_number)} ${cheapestPrice.currency_code.toUpperCase()}`
       : "",
   ].filter(Boolean)
 
-  return `${parts.join(", ")}. Inspected and authenticated tennis gear at ${SITE_NAME}.`
+  return `${parts.join(", ")}. Matériel de tennis inspecté et authentifié chez ${SITE_NAME}.`
 }

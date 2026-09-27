@@ -5,6 +5,7 @@ import { ChevronDown, Funnel } from "@medusajs/icons"
 import { clx, Text } from "@modules/common/components/ui"
 import Accordion from "@modules/common/components/accordion"
 import FilterChipGroup from "@modules/common/components/filter-chip-group"
+import { useTranslation } from "@lib/context/translation-context"
 import PriceFilter, { PriceBounds, PriceRange } from "./price-filter"
 
 export type FilterItem = {
@@ -48,6 +49,7 @@ const Filter = ({
   onPriceRangeChange,
   "data-testid": dataTestId,
 }: FilterProps) => {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
   const validPriceBounds =
@@ -89,7 +91,7 @@ const Filter = ({
       >
         <span className="flex items-center gap-x-2">
           <Funnel className="w-4 h-4" />
-          <Text className="text-sm font-semibold">Filters</Text>
+          <Text className="text-sm font-semibold">{t("Filters")}</Text>
         </span>
         <ChevronDown
           className={clx(
@@ -105,11 +107,11 @@ const Filter = ({
           onValueChange={setOpenSections}
         >
           {categories.length > 0 && (
-            <Accordion.Item title="Category" value="Category" className="first:border-t-0">
+            <Accordion.Item title={t("Category")} value="Category" className="first:border-t-0">
               <div className="pb-3">
                 <FilterChipGroup
                   items={[
-                    { value: "all", label: "All Categories" },
+                    { value: "all", label: t("All Categories") },
                     ...categories,
                   ]}
                   value={selectedCategory || "all"}
@@ -123,7 +125,7 @@ const Filter = ({
           )}
           {validPriceBounds && (
             <Accordion.Item
-              title="Price"
+              title={t("Price")}
               value="Price"
               className={categories.length === 0 ? "first:border-t-0" : undefined}
             >
@@ -138,11 +140,12 @@ const Filter = ({
             </Accordion.Item>
           )}
           {optionGroups.map((group) => (
-            <Accordion.Item key={group.title} title={group.title} value={group.title}>
+            <Accordion.Item key={group.title} title={t(group.title)} value={group.title}>
               <div className="pb-3">
                 <FilterChipGroup
                   items={[
-                    { value: "all", label: `All ${group.title}` },
+                    // "Toutes" agrees with the option names in French (Marque, Taille, Couleur).
+                    { value: "all", label: t("All") },
                     ...group.items,
                   ]}
                   value={selectedOptions[group.title] || "all"}
