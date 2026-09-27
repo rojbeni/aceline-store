@@ -1,40 +1,24 @@
-import { listCategories } from "@lib/data/categories";
-import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
-import { listRegions } from "@lib/data/regions"
 import { getTranslation } from "@lib/util/translations"
-import FooterSelectors from "@modules/layout/components/footer-selectors"
-
-import LocalizedClientLink from "@modules/common/components/localized-client-link";
-import { SiFacebook } from "@icons-pack/react-simple-icons";
+import FooterBottomBar from "@modules/layout/components/footer-bottom-bar"
 
 export default async function Footer() {
-  const productCategories = await listCategories();
-  const [regions, locales, currentLocale] = await Promise.all([
-    listRegions(),
-    listLocales(),
-    getLocale(),
-  ])
+  const currentLocale = await getLocale()
   const t = (key: string) => getTranslation(currentLocale, key)
 
   return (
-    <div className="sticky">
-      <footer className="border-t border-ui-border-base w-full py-6">
-        <div className="content-container flex flex-col sm:flex-row justify-between items-center gap-y-4 w-full">
-          <div>
-            <LocalizedClientLink href="/">Aceline Store</LocalizedClientLink>
-            <p>&copy; {new Date().getFullYear()} Aceline Store. {t("All rights reserved.")}</p>
-          </div>
-          <div>
-            <a href="https://facebook.com" target="_blank" aria-label="Facebook" className="flex justify-end" >
-              <SiFacebook className="h-6 w-6 " color="default" />
-            </a>
-            <FooterSelectors regions={regions} locales={locales} currentLocale={currentLocale} />
-          </div>
-        </div>
-      </footer >
-    </div>
-
-
-  );
+    // While the PDP's fixed mobile buy bar (MobileActions, lg:hidden) is on
+    // screen it covers the bottom of the page — pad the footer to clear it.
+    <footer
+      className="w-full border-t border-outline-variant bg-surface-container-lowest [body:has([data-testid=mobile-actions])_&]:pb-32 lg:[body:has([data-testid=mobile-actions])_&]:pb-0"
+      data-testid="footer"
+    >
+      <div className="content-container py-6">
+        <FooterBottomBar
+          rightsLabel={t("All rights reserved.")}
+          locationLabel={t("Second-hand tennis gear · Tunisia")}
+        />
+      </div>
+    </footer>
+  )
 }

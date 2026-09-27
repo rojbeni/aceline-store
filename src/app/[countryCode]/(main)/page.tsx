@@ -5,7 +5,6 @@ import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import { SortOptions } from "@modules/store/components/sort"
 import Hero from "@modules/home/components/hero"
-import BentoGrid from "@modules/home/components/bento-grid"
 import Philosophy from "@modules/home/components/philosophy"
 import JsonLd from "@modules/common/components/json-ld"
 import { buildAlternates, DEFAULT_DESCRIPTION, SITE_NAME } from "@lib/util/seo"
@@ -45,10 +44,6 @@ export default async function Home(props: {
     <>
       <JsonLd data={getSiteJsonLd(countryCode)} />
       <Hero />
-
-      <div className="content-container py-12">
-        <BentoGrid />
-      </div>
 
       <ul className="flex flex-col">
         <FeaturedProducts collections={collections} region={region} />

@@ -9,12 +9,12 @@ import {
 } from "@headlessui/react"
 import { Fragment, useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import ReactCountryFlag from "react-country-flag"
 
 import { StateType } from "@lib/hooks/use-toggle-state"
 import { updateLocale } from "@lib/data/locale-actions"
 import { Locale } from "@lib/data/locales"
 import { useTranslation } from "@lib/context/translation-context"
+import RoundFlag from "@modules/common/components/round-flag"
 
 type LanguageOption = {
   code: string
@@ -69,7 +69,7 @@ const DEFAULT_OPTION: LanguageOption = {
   code: "",
   name: "English",
   localizedName: "English",
-  countryCode: "",
+  countryCode: "GB",
 }
 
 const LanguageSelect = ({
@@ -139,28 +139,23 @@ const LanguageSelect = ({
         }
         disabled={isPending}
       >
-        <ListboxButton className="py-1 w-full">
-          <div className="flex items-start gap-x-2">
-            <span>{t("Language:")}</span>
-            {current && (
-              <span className="flex items-center gap-x-2">
-                {current.countryCode && (
-                  /* @ts-ignore */
-                  <ReactCountryFlag
-                    svg
-                    style={{
-                      width: "16px",
-                      height: "16px",
-                    }}
-                    countryCode={current.countryCode}
-                  />
-                )}
+        <ListboxButton
+          className="flex items-center gap-x-1.5 py-1"
+          data-testid="language-select-button"
+        >
+          <span className="sr-only small:not-sr-only">{t("Language:")}</span>
+          {current && (
+            <span className="flex items-center gap-x-1.5">
+              {current.countryCode && (
+                <RoundFlag countryCode={current.countryCode} />
+              )}
+              <span className="hidden small:inline capitalize">
                 {isPending ? "..." : current.localizedName}
               </span>
-            )}
-          </div>
+            </span>
+          )}
         </ListboxButton>
-        <div className="flex relative w-full min-w-[320px]">
+        <div className="relative">
           <Transition
             show={state}
             as={Fragment}
@@ -169,28 +164,16 @@ const LanguageSelect = ({
             leaveTo="opacity-0"
           >
             <ListboxOptions
-              className="absolute -bottom-[calc(100%-36px)] left-0 xsmall:left-auto xsmall:right-0 max-h-[442px] overflow-y-scroll z-[900] bg-white drop-shadow-md text-small-regular uppercase text-black no-scrollbar rounded-rounded w-full"
+              className="absolute right-0 top-full mt-1 z-[900] w-56 max-h-[320px] overflow-y-auto no-scrollbar rounded-large border border-outline-variant bg-surface-container-high py-1 text-small-regular text-surface-on shadow-2xl"
               static
             >
               {options.map((o) => (
                 <ListboxOption
                   key={o.code || "default"}
                   value={o}
-                  className="py-2 hover:bg-gray-200 px-3 cursor-pointer flex items-center gap-x-2"
+                  className="flex cursor-pointer items-center gap-x-2 px-3 py-2 data-[focus]:bg-surface-container-highest data-[selected]:text-primary-container capitalize"
                 >
-                  {o.countryCode ? (
-                    /* @ts-ignore */
-                    <ReactCountryFlag
-                      svg
-                      style={{
-                        width: "16px",
-                        height: "16px",
-                      }}
-                      countryCode={o.countryCode}
-                    />
-                  ) : (
-                    <span style={{ width: "16px", height: "16px" }} />
-                  )}
+                  <RoundFlag countryCode={o.countryCode} />
                   {o.localizedName}
                 </ListboxOption>
               ))}

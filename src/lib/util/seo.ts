@@ -7,6 +7,15 @@ import { getOptionValues, getProductBrand } from "@lib/util/product-options"
 
 export const SITE_NAME = "Aceline Store"
 
+/** Official social profile — linked in the top bar and listed as the
+ * Organization's `sameAs` in structured data. */
+export const FACEBOOK_URL = "https://www.facebook.com/match.point.916051"
+
+/** Customer phone line, also reachable on WhatsApp. */
+export const PHONE_DISPLAY = "+216 22 602 507"
+export const PHONE_E164 = "+21622602507"
+export const WHATSAPP_URL = `https://wa.me/${PHONE_E164.slice(1)}`
+
 export const DEFAULT_DESCRIPTION =
   "Matériel de tennis d'occasion authentifié : chaussures, sacs et vêtements Nike, Wilson, Asics et plus, inspectés et à petit prix en Tunisie."
 

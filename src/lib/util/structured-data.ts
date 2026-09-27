@@ -3,7 +3,12 @@ import { HttpTypes } from "@medusajs/types"
 import { getBaseURL } from "@lib/util/env"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { getProductBrand } from "@lib/util/product-options"
-import { getProductMetaDescription, SITE_NAME } from "@lib/util/seo"
+import {
+  FACEBOOK_URL,
+  getProductMetaDescription,
+  PHONE_E164,
+  SITE_NAME,
+} from "@lib/util/seo"
 
 type Crumb = { name: string; path: string }
 
@@ -96,6 +101,13 @@ export const getSiteJsonLd = (countryCode: string) => [
     "@type": "Organization",
     name: SITE_NAME,
     url: getBaseURL(),
+    sameAs: [FACEBOOK_URL],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: PHONE_E164,
+      contactType: "customer service",
+      areaServed: "TN",
+    },
   },
   {
     "@context": "https://schema.org",

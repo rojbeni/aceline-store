@@ -125,10 +125,6 @@ export const translations: Record<string, Record<string, string>> = {
     "Featured promotions": "Featured promotions",
     "Previous slide": "Previous slide",
     "Next slide": "Next slide",
-    "Pro Performance Rackets": "Pro Performance Rackets",
-    "Certified pre-owned frames from Wilson, Babolat, and Head.": "Certified pre-owned frames from Wilson, Babolat, and Head.",
-    "Court Shoes": "Court Shoes",
-    "Accessories": "Accessories",
     "Meticulously Inspected": "Meticulously Inspected",
     "Every piece of gear undergoes a 20-point inspection by our experts before it hits the store.": "Every piece of gear undergoes a 20-point inspection by our experts before it hits the store.",
     "Sustainability First": "Sustainability First",
@@ -166,7 +162,11 @@ export const translations: Record<string, Record<string, string>> = {
     "Price: High -> Low": "Price: High -> Low",
     "No products found": "No products found",
     "Try adjusting or clearing your filters.": "Try adjusting or clearing your filters.",
-    "All": "All"
+    "All": "All",
+    "Follow us on Facebook": "Follow us on Facebook",
+    "Second-hand tennis gear · Tunisia": "Second-hand tennis gear · Tunisia",
+    "Call us": "Call us",
+    "Chat on WhatsApp": "Chat on WhatsApp"
   },
   fr: {
     "Cart": "Panier",
@@ -294,10 +294,6 @@ export const translations: Record<string, Record<string, string>> = {
     "Featured promotions": "Promotions à la une",
     "Previous slide": "Diapositive précédente",
     "Next slide": "Diapositive suivante",
-    "Pro Performance Rackets": "Raquettes de performance pro",
-    "Certified pre-owned frames from Wilson, Babolat, and Head.": "Raquettes d'occasion certifiées Wilson, Babolat et Head.",
-    "Court Shoes": "Chaussures de tennis",
-    "Accessories": "Accessoires",
     "Meticulously Inspected": "Inspecté avec soin",
     "Every piece of gear undergoes a 20-point inspection by our experts before it hits the store.": "Chaque équipement passe une inspection en 20 points par nos experts avant d'arriver en boutique.",
     "Sustainability First": "La durabilité d'abord",
@@ -335,7 +331,11 @@ export const translations: Record<string, Record<string, string>> = {
     "Price: High -> Low": "Prix : décroissant",
     "No products found": "Aucun produit trouvé",
     "Try adjusting or clearing your filters.": "Essayez de modifier ou d'effacer vos filtres.",
-    "All": "Toutes"
+    "All": "Toutes",
+    "Follow us on Facebook": "Suivez-nous sur Facebook",
+    "Second-hand tennis gear · Tunisia": "Matériel de tennis d'occasion · Tunisie",
+    "Call us": "Appelez-nous",
+    "Chat on WhatsApp": "Discuter sur WhatsApp"
   }
 }
 
