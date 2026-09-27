@@ -117,7 +117,11 @@ export default function Carousel({
                     alt={imageAlt(index)}
                     fill
                     priority={index === 0}
-                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    // The LCP element on product pages: fetch it first.
+                    fetchPriority={index === 0 ? "high" : undefined}
+                    // Full width on mobile; capped at the 520px gallery column
+                    // from the `small` (1024px) breakpoint up.
+                    sizes="(max-width: 1023px) 100vw, 520px"
                     className="object-cover select-none"
                     draggable={false}
                   />

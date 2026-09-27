@@ -1,14 +1,15 @@
 import { Metadata } from "next"
+import { Suspense } from "react"
 import { notFound } from "next/navigation"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
-import { listProductGrid } from "@lib/data/products"
 import { listRegions } from "@lib/data/regions"
 import { buildAlternates } from "@lib/util/seo"
 import { getBreadcrumbJsonLd } from "@lib/util/structured-data"
 import { HttpTypes, StoreRegion } from "@medusajs/types"
-import CategoryTemplate from "@modules/categories/templates"
+import CategoryPageContent from "@modules/categories/templates/category-page-content"
 import JsonLd from "@modules/common/components/json-ld"
+import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import { SortOptions } from "@modules/store/components/sort"
 
 type Props = {
@@ -81,13 +82,6 @@ export default async function CategoryPage(props: Props) {
 
   const parent = productCategory.parent_category
 
-  const initialData = await listProductGrid({
-    page: page ? parseInt(page) : 1,
-    sortBy: sortBy || "created_at",
-    countryCode: params.countryCode,
-    categoryId: productCategory.id,
-  })
-
   return (
     <>
       <JsonLd
@@ -101,13 +95,20 @@ export default async function CategoryPage(props: Props) {
           },
         ])}
       />
-      <CategoryTemplate
-        category={productCategory}
-        sortBy={sortBy}
-        page={page}
-        countryCode={params.countryCode}
-        initialData={initialData}
-      />
+      <Suspense
+        fallback={
+          <div className="py-6 content-container">
+            <SkeletonProductGrid />
+          </div>
+        }
+      >
+        <CategoryPageContent
+          category={productCategory}
+          sortBy={sortBy}
+          page={page}
+          countryCode={params.countryCode}
+        />
+      </Suspense>
     </>
   )
 }
